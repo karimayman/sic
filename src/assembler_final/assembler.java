@@ -51,7 +51,7 @@ public class assembler {
 	}*/
 	public static String sappender4(String value,int iteration){
 		String zero = "";
-		if (iteration == 1) {
+		if (iteration == 3) {
 			zero="0";
 			zero =zero+value;
 		}
@@ -59,7 +59,7 @@ public class assembler {
 			zero="00";
 			zero = zero+value;
 		}
-		else if(iteration ==3) {
+		else if(iteration ==1) {
 			zero="000";
 			zero = zero+value;
 		}
@@ -428,7 +428,7 @@ public class assembler {
 	}
 		else {*/
 			objectcode.write(op.get(line_arr[0])+sappender4(st.get(line_arr[1]),st.get(line_arr[1]).length())+"\n");
-
+			
 		//}
 	}
 
