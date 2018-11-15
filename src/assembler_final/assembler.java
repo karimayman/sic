@@ -6,13 +6,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+;
+
+
 public class assembler {
 	public static  String ascii_maker(String value,int string_length) throws UnsupportedEncodingException{
 		/*int number = 0 ; 
@@ -82,12 +88,15 @@ public class assembler {
 		}
 		return zero;
 	}        
-	public static String linetype(int count , String line) {
+	public static String linetype(int count , String line,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit) {
 		String type = "";
 		int flag = 0;
     	StringTokenizer token = new StringTokenizer(line);
     	String[] arr_token= line.split(" ");
             if (token.countTokens()>2) {
+            	if(arr_token[2].charAt(0)=='=') {
+            		temp_lit.add(arr_token[2]);
+            	}
     		if(arr_token[1].equals("BYTE") ) {
     		 type = "byte";
     		 
@@ -113,11 +122,20 @@ public class assembler {
                 	type ="format4";
                 	
                 }
+                else if(OP_2.containsKey(arr_token[0])) {
+    		 		type ="format2";
+    		 	}
+                else if(OP_2.containsKey(arr_token[1])) {
+	      			type ="format2_label";
+	      		}
     		else {
     			 type = "label";
     		}
 	}
        else if (token.countTokens()==2){
+		    	   if(arr_token[1].charAt(0)=='=') {
+		       		temp_lit.add(arr_token[1]);
+		       		}	
                  if (arr_token[1].equals("START")&&count!=3 ) {
     			 type = "notStart";
     			
@@ -125,24 +143,38 @@ public class assembler {
                  else if (arr_token[0].equals("END")) {
     			 type = "end";
                  }
-    		
-                 else if(arr_token[0].charAt(0)== '+') {
+    			 else if(arr_token[0].charAt(0)== '+') {
                  	type ="format4_2";
                  	
                  }
+                 else if(OP_2.containsKey(arr_token[0])) {
+         			type ="format2";
+         		}
+                 else if(OP_1.containsKey(arr_token[1])) {
+         			type ="format1_label";
+         		}
 
                 else {
                     type = "instruction";
                 }
             
         }
-       else if (token.countTokens()<2) {
-    		type = "invalid";
+       else if (token.countTokens()==1) {
+    	   
+    		if(OP_1.containsKey(arr_token[0])) {
+    			type ="format1";
+    		}
+    		else if(arr_token[0].equals("RSUB")) {
+    			type="intruction";
+    		}
+    		else if(arr_token[0].equals("LTORG")) {
+    			type="ltorg";
+    		}
     	}
     	return type; 
    }
 	
-	public static void pass1(String myfile,Map<String,String>st) throws IOException {
+	public static void pass1(String myfile,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit) throws IOException {
 		File file = new File(myfile);
 		String line = "";
 		String line_type = "";
@@ -153,9 +185,9 @@ public class assembler {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			
-		    while ((line = reader.readLine()) != null) {
+		    while ((line = reader.readLine()) != null) { 
 		    	StringTokenizer token = new StringTokenizer(line);
-		    	line_type = linetype(token.countTokens(),line);
+		    	line_type = linetype(token.countTokens(),line,OP_1,OP_2,temp_lit);
 		    	String line_arr[] = line.split(" ");
 		    	String x = "x";
 	    		String c ="c";
@@ -265,38 +297,69 @@ public class assembler {
 		    		 pccounter +=0X4;
 		    		 
 		    	}
+		    	else if (line_type.equals("format1")) {
+		    		 pass1counter.println(String.format("%x", pccounter));
+		    		 pccounter +=0X1;
+		    		 
+		    	}
+		    	else if (line_type.equals("format2")) {
+		    		 pass1counter.println(String.format("%x", pccounter));
+		    		 pccounter +=0X2;
+		    		 
+		    	}
+		    	else if (line_type.equals("format2_label")) {
+		    		 pass1counter.println(String.format("%x", pccounter));
+		    		 pccounter +=0X2;
+		    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
+		    		 
+		    	}
+		    	else if (line_type.equals("format1_label")) {
+		    		 pass1counter.println(String.format("%x", pccounter));
+		    		 pccounter +=0X1;
+		    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
+		    	}
+		    	else if(line_type.equals("ltorg")) {
+		    		
+		    	}
+
 		    	else if (line_type.equals("equ")) {
 		    		 pass1counter.println(String.format("%x", pccounter));
 		    		 if(line_arr[2].charAt(0)=='*') {
 		    		 st.put(line_arr[0],String.format("%x", pccounter));
 		    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
+		    		 st.put(line_arr[0],String.format("%x", pccounter) );
 		    		 }
 		    		 else if(line_arr[2].indexOf('-')>=0||line_arr[2].indexOf('+')>=0){
 		    				if(line_arr[2].indexOf('-')>0) {
 		    					int place =line_arr[2].indexOf('-');
-		    					String subs1 = line_arr[2].substring(0, place-1);
-		    					String subs2 = line_arr[2].substring(place+1,line_arr[2].length()-1 );
-		    					int op1 = Integer.parseInt(String.format("%x", st.get(subs1)),10);
-		    					int op2 = Integer.parseInt(String.format("%x", st.get(subs2)),10);
-		    					int result = op1+op2;
+		    					String subs1 = line_arr[2].substring(0, place);
+		    					System.out.println(subs1);
+		    					String subs2 = line_arr[2].substring(place+1,line_arr[2].length() );
+		    					System.out.println(subs2);
+		    					int op1 = Integer.parseInt( st.get(subs1),16);
+		    					int op2 = Integer.parseInt( st.get(subs2),16);
+		    					int result = op1-op2;
 		    					String result_s= String.format("%x", result);
 		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
+		    					st.put(line_arr[0], result_s);
 		    				}
 		    				else if(line_arr[2].indexOf('+')>0) {
 		    					int place =line_arr[2].indexOf('+');
-		    					String subs1 = line_arr[2].substring(0, place-1);
-		    					String subs2 = line_arr[2].substring(place+1,line_arr[2].length()-1 );
-		    					int op1 = Integer.parseInt(String.format("%x", st.get(subs1)),10);
-		    					int op2 = Integer.parseInt(String.format("%x", st.get(subs2)),10);
+		    					String subs1 = line_arr[2].substring(0, place);
+		    					String subs2 = line_arr[2].substring(place+1,line_arr[2].length() );
+		    					int op1 = Integer.parseInt(String.format("%x", st.get(subs1)));
+		    					int op2 = Integer.parseInt(String.format("%x", st.get(subs2)));
 		    					int result = op1+op2;
 		    					String result_s= String.format("%x", result);
 		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
+		    					st.put(line_arr[0], result_s);
 		    				}
 		    				 
 		    			 }
 		    		 else {
 		    			 st.put(line_arr[0],String.format("%x", Integer.parseInt(line_arr[2])));
-		    		 	 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x",line_arr[2])); 
+		    		 	 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x",line_arr[2]));
+		    		 	st.put(line_arr[0], String.format("%x", line_arr[2]));
 		    		 	}
 		    		 }
 		    	 
@@ -333,7 +396,7 @@ public class assembler {
 		symboltablewriter.close();
                 pass1counter.close();
 	}
-        public static void pass2(String myfile,Map<String,String>op,Map<String,String>st) throws FileNotFoundException{
+        public static void pass2(String myfile,Map<String,String>op,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit) throws FileNotFoundException{
             PrintWriter objectcode;
 			try {
 				objectcode = new PrintWriter("objectcode.txt", "UTF-8");
@@ -346,7 +409,7 @@ public class assembler {
             try {
                 while ((line = reader.readLine()) != null) {
                     StringTokenizer token = new StringTokenizer(line);
-                    line_type = linetype(token.countTokens(),line);
+                    line_type = linetype(token.countTokens(),line,OP_1,OP_2,temp_lit);
 		    	String line_arr[] = line.split(" ");
 		    	String x = "x";
 	    		String c ="c";
@@ -360,6 +423,7 @@ public class assembler {
             			objectcode.write(op.get(line_arr[0])+sappender4(instruction_helper,instruction_helper.length())+"\n");
             	}
             		else {
+            			System.out.println(line_arr[2]+"\n");
             			objectcode.write(op.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length())+"\n");
 
             		}
@@ -528,36 +592,79 @@ public class assembler {
                String myfile = filename.nextLine();
                myfile = myfile.trim();
                myfile= myfile + ".txt";
+               List<String> temp_lit = new ArrayList<String>();
+               Map<String,String > LTORG = new HashMap<>();//hashmap OPcode to simle
                Map<String,String > OP = new HashMap<>();//hashmap OPcode to simle
                Map<String,String > ST = new HashMap<>();//symble table
-               pass1(myfile,ST);
+               Map<String,String > OP_1 = new HashMap<>();//hashmap OPcode to simle
+               Map<String,String > OP_2 = new HashMap<>();//hashmap OPcode to simle
+               pass1(myfile,ST,OP_1,OP_2,temp_lit);
                OP.put("ADD", "18");
+               OP.put("ADDF", "58");
                OP.put("AND", "40");
                OP.put("COPM", "28");
+               OP.put("COPMF", "88");
                OP.put("DIV", "24");
+               OP.put("DIVF", "64");
                OP.put("J", "3C");
                OP.put("JEQ", "30");
                OP.put("JGT", "34");
                OP.put("JLT", "38");
                OP.put("JSUB", "48");
                OP.put("LDA", "00");
+               OP.put("LDB", "68");
                OP.put("LDCH", "50");
+               OP.put("LDF", "70");
                OP.put("LDL", "08");
+               OP.put("LDS", "6C");
+               OP.put("LDT", "74");
                OP.put("LDX", "04");
+               OP.put("LPS", "D0");
                OP.put("MUL", "20");
+               OP.put("MULF", "60");
                OP.put("OR", "44");
                OP.put("RD", "D8");
                OP.put("RSUB", "4C");
+               OP.put("SSK", "EC");
                OP.put("STA", "0C");
+               OP.put("STB", "78");
                OP.put("STCH", "54");
+               OP.put("STF", "80");
+               OP.put("STI", "D4");
                OP.put("STL", "14");
+               OP.put("STS", "7C");
                OP.put("STSW", "E8");
+               OP.put("STT", "84");
                OP.put("STX", "10");
                OP.put("SUB", "1C");
+               OP.put("SUBF", "5C");
                OP.put("TD", "E0");
                OP.put("TIX", "2C");
                OP.put("WD", "DC");
-               pass2(myfile,OP,ST);
+               //
+               //
+               //
+               OP_1.put("FIX", "C4");
+               OP_1.put("FLOAT", "C0");
+               OP_1.put("HIO", "F4");
+               OP_1.put("NORM", "C8");
+               OP_1.put("SIO", "F0");
+               OP_1.put("TIO", "F8");
+               //
+               //
+               //
+               OP_2.put("ADDR", "90");
+               OP_2.put("CLEAR", "B4");
+               OP_2.put("COMPR", "A0");
+               OP_2.put("DIVR", "9C");
+               OP_2.put("MULR", "98");
+               OP_2.put("RMO", "AC");
+               OP_2.put("SHIFTL", "A4");
+               OP_2.put("SHIFTR", "A8");
+               OP_2.put("SUBR", "94");
+               OP_2.put("SVC", "B0");
+               OP_2.put("TIXR", "B8");
+               pass2(myfile,OP,ST,OP_1,OP_2,temp_lit);
                System.out.println("fin");
 
 	}
