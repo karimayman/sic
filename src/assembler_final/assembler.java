@@ -106,6 +106,13 @@ public class assembler {
     			 type = "start"; 
     			
     		}
+                else if(arr_token[1].equals("EQU")) {
+                	type = "equ";
+                }
+                else if(arr_token[1].charAt(0)== '+') {
+                	type ="format4";
+                	
+                }
     		else {
     			 type = "label";
     		}
@@ -119,6 +126,11 @@ public class assembler {
     			 type = "end";
                  }
     		
+                 else if(arr_token[0].charAt(0)== '+') {
+                 	type ="format4_2";
+                 	
+                 }
+
                 else {
                     type = "instruction";
                 }
@@ -137,6 +149,7 @@ public class assembler {
 		int pccounter = 0X0,intialcounter = 0X0;
 		PrintWriter symboltablewriter = new PrintWriter("symboltable.txt", "UTF-8");
                 PrintWriter pass1counter = new PrintWriter("pass1counter.txt", "UTF-8");
+                PrintWriter littable = new PrintWriter("littable.txt", "UTF-8");
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			
@@ -240,6 +253,54 @@ public class assembler {
                                 }
 		    		
 		    	}
+		    	else if (line_type.equals("format4")) {
+		    		 pass1counter.println(String.format("%x", pccounter));
+		    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
+		    		 st.put(line_arr[0],String.format("%x", pccounter));
+		    		 pccounter +=0X4;
+		    		 
+		    	}
+		    	else if (line_type.equals("format4_2")) {
+		    		 pass1counter.println(String.format("%x", pccounter));
+		    		 pccounter +=0X4;
+		    		 
+		    	}
+		    	else if (line_type.equals("equ")) {
+		    		 pass1counter.println(String.format("%x", pccounter));
+		    		 if(line_arr[2].charAt(0)=='*') {
+		    		 st.put(line_arr[0],String.format("%x", pccounter));
+		    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
+		    		 }
+		    		 else if(line_arr[2].indexOf('-')>=0||line_arr[2].indexOf('+')>=0){
+		    				if(line_arr[2].indexOf('-')>0) {
+		    					int place =line_arr[2].indexOf('-');
+		    					String subs1 = line_arr[2].substring(0, place-1);
+		    					String subs2 = line_arr[2].substring(place+1,line_arr[2].length()-1 );
+		    					int op1 = Integer.parseInt(String.format("%x", st.get(subs1)),10);
+		    					int op2 = Integer.parseInt(String.format("%x", st.get(subs2)),10);
+		    					int result = op1+op2;
+		    					String result_s= String.format("%x", result);
+		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
+		    				}
+		    				else if(line_arr[2].indexOf('+')>0) {
+		    					int place =line_arr[2].indexOf('+');
+		    					String subs1 = line_arr[2].substring(0, place-1);
+		    					String subs2 = line_arr[2].substring(place+1,line_arr[2].length()-1 );
+		    					int op1 = Integer.parseInt(String.format("%x", st.get(subs1)),10);
+		    					int op2 = Integer.parseInt(String.format("%x", st.get(subs2)),10);
+		    					int result = op1+op2;
+		    					String result_s= String.format("%x", result);
+		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
+		    				}
+		    				 
+		    			 }
+		    		 else {
+		    			 st.put(line_arr[0],String.format("%x", Integer.parseInt(line_arr[2])));
+		    		 	 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x",line_arr[2])); 
+		    		 	}
+		    		 }
+		    	 
+		
 		    	else if (line_type.equals("RESB")){
                                 pass1counter.println(String.format("%x", pccounter));
 		    		//String pc = Integer.toString(pccounter);
