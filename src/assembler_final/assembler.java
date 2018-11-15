@@ -381,21 +381,34 @@ public class assembler {
 			remover.deleteCharAt(0);
 			remover.deleteCharAt(0);
 			remover.deleteCharAt(line_arr[2].length()-3);
-			line_arr[2]=sappender6(remover.toString());
+			line_arr[2]=remover.toString();
 			byte[] bytes =line_arr[2].getBytes("US-ASCII");
 			int iterations = line_arr[2].length();
 			for(int i =0; i<iterations; i+=3) {
 		    if(iterations-i>=3) {
-		    	ascii = Integer.toString(bytes[i])+Integer.toString(bytes[i+1])+Integer.toString(bytes[i+2]);
-			    objectcode.write(ascii+"\n");
+		    	int ascii1 = (bytes[i]);
+		    	int ascii2=(bytes[i+1]);
+		    	int ascii3=(bytes[i+2]);
+		    	String ascii1_s=String.format("%x", ascii1);
+		    	String ascii2_s=String.format("%x", ascii2);
+		    	String ascii3_s=String.format("%x", ascii3);
+		    	ascii=ascii1_s+ascii2_s+ascii3_s;
+		    	   objectcode.write( ascii+"\n");
 		    }
 		    else if(iterations-i>=2) {
-			     ascii = Integer.toString(bytes[i])+Integer.toString(bytes[i+1]);
-				    objectcode.write(ascii+"\n");
+		    	int ascii1 = (bytes[i]);
+		    	int ascii2=(bytes[i+1]);
+		    	String ascii1_s=String.format("%x", ascii1);
+		    	String ascii2_s=String.format("%x", ascii2);
+		    	ascii=ascii1_s+ascii2_s;
+				   System.out.println(ascii); 
+		    	   objectcode.write( ascii+"\n");
 		    }
 		    else if(iterations-i==1) {
-			     ascii = Integer.toString(bytes[i]);
-		    objectcode.write(ascii+"\n");
+		    	 int ascii1 = (bytes[i]);
+		    	 String ascii1_s=String.format("%x", ascii1);
+		    	 ascii = ascii1_s;
+		    objectcode.write( ascii+"\n");
 		    }
 				}
 		
@@ -484,6 +497,7 @@ public class assembler {
                OP.put("TIX", "2C");
                OP.put("WD", "DC");
                pass2(myfile,OP,ST);
+               System.out.println("fin");
 
 	}
 
