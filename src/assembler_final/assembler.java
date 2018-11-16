@@ -20,6 +20,18 @@ import java.util.logging.Logger;
 
 
 public class assembler {
+	public static boolean isNumeric(String str)  
+	{  
+	  try  
+	  {  
+	    double d = Double.parseDouble(str);  
+	  }  
+	  catch(NumberFormatException nfe)  
+	  {  
+	    return false;  
+	  }  
+	  return true;  
+	}
 	public static  String ascii_maker(String value,int string_length) throws UnsupportedEncodingException{
 		/*int number = 0 ; 
 		String ascii=""; 
@@ -452,7 +464,7 @@ public class assembler {
 		symboltablewriter.close();
                 pass1counter.close();
 	}
-        public static void pass2(String myfile,Map<String,String>op,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit) throws FileNotFoundException{
+        public static void pass2(String myfile,Map<String,String>op,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String > OPM) throws FileNotFoundException{
             PrintWriter objectcode;
 			try {
 				objectcode = new PrintWriter("objectcode.txt", "UTF-8");
@@ -480,6 +492,7 @@ public class assembler {
             	}
             		else {
             			System.out.println(line_arr[2]+"\n");
+            			if(!isNumeric(line_arr[1]) && line_arr[2].charAt(0)!='=')
             			objectcode.write(op.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length())+"\n");
 
             		}
@@ -621,8 +634,9 @@ public class assembler {
 		objectcode.write(op.get(line_arr[0])+sappender4(instruction_helper)+"\n");
 	}
 		else {*/
-			System.out.println(st.get(line_arr[1]));
-			objectcode.write(op.get(line_arr[0])+sappender4(st.get(line_arr[1]),st.get(line_arr[1]).length())+"\n");
+			System.out.println(line_arr[0]+" "+line_arr[1]);
+			if(!isNumeric(line_arr[1]))
+			objectcode.write(OPM.get(line_arr[0])+sappender4(st.get(line_arr[1]),st.get(line_arr[1]).length())+"\n");
 			
 		//}
 	}
@@ -720,9 +734,76 @@ public class assembler {
                OP_2.put("SHIFTR", "A8");
                OP_2.put("SUBR", "94");
                OP_2.put("SVC", "B0");
-               OP_2.put("TIXR", "B8");
+               OP_2.put("TIXR", "B8");	
+               Map<String,String > OPM = new HashMap<>();//hashmap OPMcode to simle
+               
+               OPM.put("ADD", "18");
+               OPM.put("ADDF", "58");
+               OPM.put("AND", "40");
+               OPM.put("COPMM", "28");
+               OPM.put("COPMMF", "88");
+               OPM.put("DIV", "24");
+               OPM.put("DIVF", "64");
+               OPM.put("J", "3C");
+               OPM.put("JEQ", "30");
+               OPM.put("JGT", "34");
+               OPM.put("JLT", "38");
+               OPM.put("JSUB", "48");
+               OPM.put("LDA", "00");
+               OPM.put("LDB", "68");
+               OPM.put("LDCH", "50");
+               OPM.put("LDF", "70");
+               OPM.put("LDL", "08");
+               OPM.put("LDS", "6C");
+               OPM.put("LDT", "74");
+               OPM.put("LDX", "04");
+               OPM.put("LPS", "D0");
+               OPM.put("MUL", "20");
+               OPM.put("MULF", "60");
+               OPM.put("OR", "44");
+               OPM.put("RD", "D8");
+               OPM.put("RSUB", "4C");
+               OPM.put("SSK", "EC");
+               OPM.put("STA", "0C");
+               OPM.put("STB", "78");
+               OPM.put("STCH", "54");
+               OPM.put("STF", "80");
+               OPM.put("STI", "D4");
+               OPM.put("STL", "14");
+               OPM.put("STS", "7C");
+               OPM.put("STSW", "E8");
+               OPM.put("STT", "84");
+               OPM.put("STX", "10");
+               OPM.put("SUB", "1C");
+               OPM.put("SUBF", "5C");
+               OPM.put("TD", "E0");
+               OPM.put("TIX", "2C");
+               OPM.put("WD", "DC");
+               //
+               //
+               //
+               OPM.put("FIX", "C4");
+               OPM.put("FLOAT", "C0");
+               OPM.put("HIO", "F4");
+               OPM.put("NORM", "C8");
+               OPM.put("SIO", "F0");
+               OPM.put("TIO", "F8");
+               //
+               //
+               //
+               OPM.put("ADDR", "90");
+               OPM.put("CLEAR", "B4");
+               OPM.put("COMPR", "A0");
+               OPM.put("DIVR", "9C");
+               OPM.put("MULR", "98");
+               OPM.put("RMO", "AC");
+               OPM.put("SHIFTL", "A4");
+               OPM.put("SHIFTR", "A8");
+               OPM.put("SUBR", "94");
+               OPM.put("SVC", "B0");
+               OPM.put("TIXR", "B8");
                pass1(myfile,ST,OP_1,OP_2,temp_lit,LTORG);
-               pass2(myfile,OP,ST,OP_1,OP_2,temp_lit);
+               pass2(myfile,OP,ST,OP_1,OP_2,temp_lit,OPM);
                System.out.println("fin");
 
 	}
