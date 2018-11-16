@@ -95,6 +95,7 @@ public class assembler {
     	String[] arr_token= line.split(" ");
             if (token.countTokens()>2) {
             	if(arr_token[2].charAt(0)=='=') {
+            		if(!temp_lit.contains(arr_token[2]))
             		temp_lit.add(arr_token[2]);
             	}
     		if(arr_token[1].equals("BYTE") ) {
@@ -134,7 +135,8 @@ public class assembler {
 	}
        else if (token.countTokens()==2){
 		    	   if(arr_token[1].charAt(0)=='=') {
-		       		temp_lit.add(arr_token[1]);
+		    		   if(!temp_lit.contains(arr_token[1]))
+		    		   temp_lit.add(arr_token[1]);
 		       		}	
                  if (arr_token[1].equals("START")&&count!=3 ) {
     			 type = "notStart";
@@ -174,7 +176,7 @@ public class assembler {
     	return type; 
    }
 	
-	public static void pass1(String myfile,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit) throws IOException {
+	public static void pass1(String myfile,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String>ltorg) throws IOException {
 		File file = new File(myfile);
 		String line = "";
 		String line_type = "";
@@ -309,17 +311,53 @@ public class assembler {
 		    	}
 		    	else if (line_type.equals("format2_label")) {
 		    		 pass1counter.println(String.format("%x", pccounter));
-		    		 pccounter +=0X2;
 		    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
+		    		 pccounter +=0X2;
 		    		 
 		    	}
 		    	else if (line_type.equals("format1_label")) {
 		    		 pass1counter.println(String.format("%x", pccounter));
-		    		 pccounter +=0X1;
 		    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
+		    		 pccounter +=0X1;
 		    	}
 		    	else if(line_type.equals("ltorg")) {
-		    		
+		    			for (int i=0;i<temp_lit.size();i++) {
+		    				String temp_holder = temp_lit.get(i);
+		    				if(temp_holder.charAt(0)=='X') {
+			   		    		StringBuilder remover = new StringBuilder(temp_holder) ;
+				    			remover.deleteCharAt(0);
+				    			remover.deleteCharAt(0);
+				    			remover.deleteCharAt(line_arr[2].length()-3);
+				    			temp_holder=(remover.toString());
+				    			littable.println(" "+temp_lit.get(i)+temp_lit.get(i).length()+String.format("%x", pccounter)+"\n");
+				    			double size=(double) temp_holder.length()/2;
+				    			size = Math.ceil(size);
+				    			int inted_size= (int) size;	
+				    			pccounter=pccounter+(inted_size);
+				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
+	                        
+		    				}
+		    				else if(temp_holder.charAt(0)=='c') {
+		    		    		StringBuilder remover = new StringBuilder(temp_holder) ;
+				    			remover.deleteCharAt(0);
+				    			remover.deleteCharAt(0);
+				    			remover.deleteCharAt(line_arr[2].length()-3);
+				    			temp_holder=(remover.toString());
+				    			littable.println(" "+temp_lit.get(i)+temp_lit.get(i).length()+String.format("%x", pccounter)+"\n");
+				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
+				    			int inted_size=temp_holder.length();	
+				    			pccounter=pccounter+(inted_size);
+
+		    				}
+		    				else {
+		    					littable.println(" "+temp_lit.get(i)+temp_lit.get(i).length()+String.format("%x", pccounter)+"\n");
+		    					ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
+		    					String temp1= String.format("%x", temp_lit.get(i));
+		    					int temp2 = Integer.parseInt(temp1,16);
+		    					pccounter=pccounter+temp2;
+		    				}
+		    			}
+		    			temp_lit.clear();
 		    	}
 
 		    	else if (line_type.equals("equ")) {
@@ -329,6 +367,11 @@ public class assembler {
 		    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
 		    		 st.put(line_arr[0],String.format("%x", pccounter) );
 		    		 }
+		    		/* else if(line_arr[2].charAt(0)=='=') {
+			    		 st.put(line_arr[0],String.format("%x", pccounter));
+			    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
+			    		 st.put(line_arr[0],String.format("%x", pccounter) );
+			    		 }*/
 		    		 else if(line_arr[2].indexOf('-')>=0||line_arr[2].indexOf('+')>=0){
 		    				if(line_arr[2].indexOf('-')>0) {
 		    					int place =line_arr[2].indexOf('-');
@@ -353,16 +396,22 @@ public class assembler {
 		    					String result_s= String.format("%x", result);
 		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
 		    					st.put(line_arr[0], result_s);
+		    					}
+		    		 		}
+		    				else if(st.containsKey(line_arr[2])) {
+		    					String temp_holding = st.get(line_arr[2]);
+		    					symboltablewriter.println(line_arr[0]+ "	"+temp_holding);
+		    					st.put(line_arr[0], temp_holding);
 		    				}
 		    				 
-		    			 }
+		    			 
 		    		 else {
 		    			 st.put(line_arr[0],String.format("%x", Integer.parseInt(line_arr[2])));
 		    		 	 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x",line_arr[2]));
 		    		 	st.put(line_arr[0], String.format("%x", line_arr[2]));
 		    		 	}
 		    		 }
-		    	 
+			
 		
 		    	else if (line_type.equals("RESB")){
                                 pass1counter.println(String.format("%x", pccounter));
@@ -598,7 +647,7 @@ public class assembler {
                Map<String,String > ST = new HashMap<>();//symble table
                Map<String,String > OP_1 = new HashMap<>();//hashmap OPcode to simle
                Map<String,String > OP_2 = new HashMap<>();//hashmap OPcode to simle
-               pass1(myfile,ST,OP_1,OP_2,temp_lit);
+               
                OP.put("ADD", "18");
                OP.put("ADDF", "58");
                OP.put("AND", "40");
@@ -664,6 +713,7 @@ public class assembler {
                OP_2.put("SUBR", "94");
                OP_2.put("SVC", "B0");
                OP_2.put("TIXR", "B8");
+               pass1(myfile,ST,OP_1,OP_2,temp_lit,LTORG);
                pass2(myfile,OP,ST,OP_1,OP_2,temp_lit);
                System.out.println("fin");
 
