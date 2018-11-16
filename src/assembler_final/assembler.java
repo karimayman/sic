@@ -620,7 +620,6 @@ public class assembler {
 	else if (line_type.equals("RESB")){
 		//objectcode.write("\n");
 	}
-	else if (line_type.equals("RESW")){
 		//objectcode.write("\n");       
 	
 	}
