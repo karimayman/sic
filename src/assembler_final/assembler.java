@@ -332,7 +332,8 @@ public class assembler {
 		    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
 		    		 pccounter +=0X1;
 		    	}
-		    	else if(line_type.equals("ltorg")) {
+		    	else if(line_type.equals("ltorg")||line_type.equals("end")) {
+		    		if(!temp_lit.isEmpty()) {
 		    			for (int i=0;i<temp_lit.size();i++) {
 		    				String temp_holder = temp_lit.get(i);
 		    				if(temp_holder.charAt(1)=='X') {
@@ -430,7 +431,7 @@ public class assembler {
 		    		 	st.put(line_arr[0], String.format("%x", line_arr[2]));
 		    		 	}
 		    		 }
-			
+		    	}
 		
 		    	else if (line_type.equals("RESB")){
                                 pass1counter.println(String.format("%x", pccounter));
