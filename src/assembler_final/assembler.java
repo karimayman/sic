@@ -323,11 +323,12 @@ public class assembler {
 		    	else if(line_type.equals("ltorg")) {
 		    			for (int i=0;i<temp_lit.size();i++) {
 		    				String temp_holder = temp_lit.get(i);
-		    				if(temp_holder.charAt(0)=='X') {
+		    				if(temp_holder.charAt(1)=='X') {
 			   		    		StringBuilder remover = new StringBuilder(temp_holder) ;
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(0);
-				    			remover.deleteCharAt(line_arr[2].length()-3);
+				    			remover.deleteCharAt(0);
+				    			remover.deleteCharAt(temp_holder.length()-4);
 				    			temp_holder=(remover.toString());
 				    			littable.println(" "+temp_lit.get(i)+temp_lit.get(i).length()+String.format("%x", pccounter)+"\n");
 				    			double size=(double) temp_holder.length()/2;
@@ -337,11 +338,13 @@ public class assembler {
 				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
 	                        
 		    				}
-		    				else if(temp_holder.charAt(0)=='c') {
+		    				else if(temp_holder.charAt(1)=='C') {
 		    		    		StringBuilder remover = new StringBuilder(temp_holder) ;
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(0);
-				    			remover.deleteCharAt(line_arr[2].length()-3);
+				    			remover.deleteCharAt(0);
+				    			
+				    			remover.deleteCharAt(temp_holder.length()-4);
 				    			temp_holder=(remover.toString());
 				    			littable.println(" "+temp_lit.get(i)+temp_lit.get(i).length()+String.format("%x", pccounter)+"\n");
 				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
@@ -350,8 +353,12 @@ public class assembler {
 
 		    				}
 		    				else {
+		    					StringBuilder remover = new StringBuilder(temp_holder) ;
+				    			temp_holder = remover.deleteCharAt(0).toString();
+				    		
 		    					littable.println(" "+temp_lit.get(i)+temp_lit.get(i).length()+String.format("%x", pccounter)+"\n");
 		    					ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
+		    					System.out.println(temp_lit.get(i));
 		    					String temp1= String.format("%x", temp_lit.get(i));
 		    					int temp2 = Integer.parseInt(temp1,16);
 		    					pccounter=pccounter+temp2;
@@ -614,6 +621,7 @@ public class assembler {
 		objectcode.write(op.get(line_arr[0])+sappender4(instruction_helper)+"\n");
 	}
 		else {*/
+			System.out.println(st.get(line_arr[1]));
 			objectcode.write(op.get(line_arr[0])+sappender4(st.get(line_arr[1]),st.get(line_arr[1]).length())+"\n");
 			
 		//}
