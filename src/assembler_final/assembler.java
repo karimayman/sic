@@ -343,7 +343,7 @@ public class assembler {
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(temp_holder.length()-4);
 				    			temp_holder=(remover.toString());
-				    			littable.println(" "+temp_lit.get(i)+" "+temp_lit.get(i).length()+" "+String.format("%x", pccounter)+"\n");
+				    			littable.println(" "+temp_lit.get(i)+" "+temp_holder.length()+" "+String.format("%x", pccounter)+"\n");
 				    			double size=(double) temp_holder.length()/2;
 				    			size = Math.ceil(size);
 				    			int inted_size= (int) size;	
@@ -359,7 +359,7 @@ public class assembler {
 				    			
 				    			remover.deleteCharAt(temp_holder.length()-4);
 				    			temp_holder=(remover.toString());
-				    			littable.println(" "+temp_lit.get(i)+" "+temp_lit.get(i).length()+" "+String.format("%x", pccounter)+"\n");
+				    			littable.println(" "+temp_lit.get(i)+" "+temp_holder.length()+" "+String.format("%x", pccounter)+"\n");
 				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
 				    			int inted_size=temp_holder.length();	
 				    			pccounter=pccounter+(inted_size);
@@ -369,7 +369,7 @@ public class assembler {
 		    					StringBuilder remover = new StringBuilder(temp_holder) ;
 				    			temp_holder = remover.deleteCharAt(0).toString();
 				    		
-		    					littable.println(" "+temp_lit.get(i)+" "+temp_lit.get(i).length()+" "+String.format("%x", pccounter)+"\n");
+		    					littable.println(" "+temp_lit.get(i)+" "+temp_holder.length()+" "+String.format("%x", pccounter)+"\n");
 		    					ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
 		    					System.out.println(temp_lit.get(i));
 		    					String temp1= String.format("%x", temp_lit.get(i));
@@ -378,8 +378,8 @@ public class assembler {
 		    				}
 		    			}
 		    			temp_lit.clear();
+		    		}
 		    	}
-
 		    	else if (line_type.equals("equ")) {
 		    		 pass1counter.println(String.format("%x", pccounter));
 		    		 if(line_arr[2].charAt(0)=='*') {
@@ -431,7 +431,7 @@ public class assembler {
 		    		 	st.put(line_arr[0], String.format("%x", line_arr[2]));
 		    		 	}
 		    		 }
-		    	}
+		    	
 		
 		    	else if (line_type.equals("RESB")){
                                 pass1counter.println(String.format("%x", pccounter));
