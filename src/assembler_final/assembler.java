@@ -334,6 +334,7 @@ public class assembler {
 		    	}
 		    	else if(line_type.equals("ltorg")||line_type.equals("end")) {
 		    		if(!temp_lit.isEmpty()) {
+		    			
 		    			for (int i=0;i<temp_lit.size();i++) {
 		    				String temp_holder = temp_lit.get(i);
 		    				if(temp_holder.charAt(1)=='X') {
@@ -343,7 +344,7 @@ public class assembler {
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(temp_holder.length()-4);
 				    			temp_holder=(remover.toString());
-				    			littable.println(" "+temp_lit.get(i)+temp_lit.get(i).length()+String.format("%x", pccounter)+"\n");
+				    			littable.println(" "+temp_lit.get(i)+" "+temp_lit.get(i).length()+" "+String.format("%x", pccounter)+"\n");
 				    			double size=(double) temp_holder.length()/2;
 				    			size = Math.ceil(size);
 				    			int inted_size= (int) size;	
@@ -359,7 +360,8 @@ public class assembler {
 				    			
 				    			remover.deleteCharAt(temp_holder.length()-4);
 				    			temp_holder=(remover.toString());
-				    			littable.println(" "+temp_lit.get(i)+temp_lit.get(i).length()+String.format("%x", pccounter)+"\n");
+				    			System.out.println("littab printing");
+				    			littable.println(" "+temp_lit.get(i)+" "+temp_lit.get(i).length()+" "+String.format("%x", pccounter)+"\n");
 				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
 				    			int inted_size=temp_holder.length();	
 				    			pccounter=pccounter+(inted_size);
@@ -369,7 +371,7 @@ public class assembler {
 		    					StringBuilder remover = new StringBuilder(temp_holder) ;
 				    			temp_holder = remover.deleteCharAt(0).toString();
 				    		
-		    					littable.println(" "+temp_lit.get(i)+temp_lit.get(i).length()+String.format("%x", pccounter)+"\n");
+		    					littable.println(" "+temp_lit.get(i)+" "+temp_lit.get(i).length()+" "+String.format("%x", pccounter)+"\n");
 		    					ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
 		    					System.out.println(temp_lit.get(i));
 		    					String temp1= String.format("%x", temp_lit.get(i));
@@ -464,6 +466,7 @@ public class assembler {
 		}
 		symboltablewriter.close();
                 pass1counter.close();
+                littable.close();
 	}
         	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
