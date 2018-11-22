@@ -445,6 +445,7 @@ public class assembler {
 		    				}
 		    				else if(st.containsKey(line_arr[2])) {
 		    					String temp_holding = st.get(line_arr[2]);
+		    					
 		    					symboltablewriter.println(line_arr[0]+ "	"+temp_holding);
 		    					st.put(line_arr[0], temp_holding);
 		    				}
@@ -453,6 +454,7 @@ public class assembler {
 		    		 else {
 		    			 st.put(line_arr[0],String.format("%x", Integer.parseInt(line_arr[2])));
 		    		 	 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x",line_arr[2]));
+		    		 	 
 		    		 	st.put(line_arr[0], String.format("%x", line_arr[2]));
 		    		 	}	
 		    		 }
