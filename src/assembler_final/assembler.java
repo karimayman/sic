@@ -384,13 +384,13 @@ public class assembler {
 		    		}
 
 		    	else if (line_type.equals("equ")) {
-		    		 System.out.println("aha");
+		    		 
 		    		 pass1counter.println(String.format("%x", pccounter));
 		    		 if(line_arr[2].charAt(0)=='*') {
 		    			
 		    		 st.put(line_arr[0],String.format("%x", pccounter));
 		    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
-		    		 st.put(line_arr[0],String.format("%x", pccounter) );
+		    		 st.put(line_arr[0],String.format("%x", pccounter));
 		    		 }
 		    		/* else if(line_arr[2].charAt(0)=='=') {
 			    		 st.put(line_arr[0],String.format("%x", pccounter));
@@ -455,11 +455,13 @@ public class assembler {
 		    		 	 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x",line_arr[2]));
 		    		 	st.put(line_arr[0], String.format("%x", line_arr[2]));
 		    		 	}	
+		    		 }
 		    	}
 		    	else if (line_type.equals("RESB")){
                                 pass1counter.println(String.format("%x", pccounter));
 		    		//String pc = Integer.toString(pccounter);
 		    		symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
+		    		System.out.println(line_arr[0]+ "	"+String.format("%x", pccounter));
                                 st.put(line_arr[0],String.format("%x", pccounter));
                                 pccounter =pccounter + (Integer.parseInt(line_arr[2]));
 
@@ -478,7 +480,7 @@ public class assembler {
 		    	
 		    	}
 		    	
-		    	}
+		    
 		    }
 			
 		} catch (FileNotFoundException e) {
