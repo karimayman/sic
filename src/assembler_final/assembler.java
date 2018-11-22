@@ -349,7 +349,7 @@ public class assembler {
 				    			int inted_size= (int) size;	
 				    			String string_size= Integer.toString(inted_size);
 				    			pccounter=pccounter+(inted_size);
-				    			littable.println(" "+temp_lit.get(i)+" "+string_size+" "+String.format("%x", pccounter)+"\n");
+				    			littable.println(temp_lit.get(i)+" "+temp_holder+" "+string_size+" "+String.format("%x", pccounter));
 				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
 	                        
 		    				}
@@ -358,10 +358,10 @@ public class assembler {
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(0);
-				    			
 				    			remover.deleteCharAt(temp_holder.length()-4);
 				    			temp_holder=(remover.toString());
-				    			littable.println(" "+temp_lit.get(i)+" "+temp_holder.length()+" "+String.format("%x", pccounter)+"\n");
+				    			String value = ascii_maker(temp_holder,temp_holder.length());
+				    			littable.println(temp_lit.get(i)+" "+value+" "+temp_holder.length()+" "+String.format("%x", pccounter));
 				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
 				    			int inted_size=temp_holder.length();	
 				    			pccounter=pccounter+(inted_size);
@@ -371,7 +371,7 @@ public class assembler {
 		    					StringBuilder remover = new StringBuilder(temp_holder) ;
 				    			temp_holder = remover.deleteCharAt(0).toString();
 				    		
-		    					littable.println(" "+temp_lit.get(i)+" "+temp_holder.length()+" "+String.format("%x", pccounter)+"\n");
+		    					littable.println(temp_lit.get(i)+" "+String.format("%x",temp_holder)+" "+temp_holder.length()+" "+String.format("%x", pccounter));
 		    					ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
 		    					System.out.println(temp_lit.get(i));
 		    					String temp1= String.format("%x", temp_lit.get(i));
