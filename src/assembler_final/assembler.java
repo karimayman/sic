@@ -344,11 +344,12 @@ public class assembler {
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(temp_holder.length()-4);
 				    			temp_holder=(remover.toString());
-				    			littable.println(" "+temp_lit.get(i)+" "+temp_holder.length()+" "+String.format("%x", pccounter)+"\n");
 				    			double size=(double) temp_holder.length()/2;
 				    			size = Math.ceil(size);
 				    			int inted_size= (int) size;	
+				    			String string_size= Integer.toString(inted_size);
 				    			pccounter=pccounter+(inted_size);
+				    			littable.println(" "+temp_lit.get(i)+" "+string_size+" "+String.format("%x", pccounter)+"\n");
 				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
 	                        
 		    				}
