@@ -409,17 +409,6 @@ public class assembler {
 		    					String result_s= String.format("%x", result);
 		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
 		    					st.put(line_arr[0], result_s);
-		    				}
-		    				else if(line_arr[2].indexOf('+')>0) {
-		    					int place =line_arr[2].indexOf('+');
-		    					String subs1 = line_arr[2].substring(0, place);
-		    					String subs2 = line_arr[2].substring(place+1,line_arr[2].length() );
-		    					int op1 = Integer.parseInt(String.format("%x", st.get(subs1)));
-		    					int op2 = Integer.parseInt(String.format("%x", st.get(subs2)));
-		    					int result = op1+op2;
-		    					String result_s= String.format("%x", result);
-		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
-		    					st.put(line_arr[0], result_s);
 		    					}
 		    		 		}
 		    				else if(st.containsKey(line_arr[2])) {
