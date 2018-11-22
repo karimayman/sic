@@ -404,14 +404,45 @@ public class assembler {
 		    					System.out.println(subs1);
 		    					String subs2 = line_arr[2].substring(place+1,line_arr[2].length() );
 		    					System.out.println(subs2);
+		    					if(!isNumeric(subs2)) {
 		    					int op1 = Integer.parseInt( st.get(subs1),16);
 		    					int op2 = Integer.parseInt( st.get(subs2),16);
 		    					int result = op1-op2;
 		    					String result_s= String.format("%x", result);
 		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
 		    					st.put(line_arr[0], result_s);
+		    						}
+		    					else {
+		    						int op1 = Integer.parseInt( st.get(subs1),16);
+		    						int op2 = Integer.parseInt( subs2);
+		    						int result = op1-op2;
+		    						String result_s= String.format("%x", result);
+			    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
+			    					st.put(line_arr[0], result_s);
 		    					}
-		    		 		}
+		    					}
+		    				else if(line_arr[2].indexOf('+')>0) {
+		    					int place =line_arr[2].indexOf('+');
+		    					String subs1 = line_arr[2].substring(0, place);
+		    					String subs2 = line_arr[2].substring(place+1,line_arr[2].length() );
+		    					if(!isNumeric(subs2)) {
+		    					int op1 = Integer.parseInt( st.get(subs1),16);
+		    					int op2 = Integer.parseInt( st.get(subs2),16);
+		    					int result = op1+op2;
+		    					String result_s= String.format("%x", result);
+		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
+		    					st.put(line_arr[0], result_s);
+		    						}
+		    					
+		    				else {
+	    						int op1 = Integer.parseInt( st.get(subs1),16);
+	    						int op2 = Integer.parseInt(subs2);
+	    						int result = op1+op2;
+	    						String result_s= String.format("%x", result);
+		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
+		    					st.put(line_arr[0], result_s);
+		    					}
+		    				}
 		    				else if(st.containsKey(line_arr[2])) {
 		    					String temp_holding = st.get(line_arr[2]);
 		    					symboltablewriter.println(line_arr[0]+ "	"+temp_holding);
@@ -423,10 +454,8 @@ public class assembler {
 		    			 st.put(line_arr[0],String.format("%x", Integer.parseInt(line_arr[2])));
 		    		 	 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x",line_arr[2]));
 		    		 	st.put(line_arr[0], String.format("%x", line_arr[2]));
-		    		 	}
-		    		 }
-		    	
-		
+		    		 	}	
+		    	}
 		    	else if (line_type.equals("RESB")){
                                 pass1counter.println(String.format("%x", pccounter));
 		    		//String pc = Integer.toString(pccounter);
@@ -449,8 +478,8 @@ public class assembler {
 		    	
 		    	}
 		    	
+		    	}
 		    }
-			
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
