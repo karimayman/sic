@@ -20,6 +20,17 @@ import java.util.logging.Logger;
 
 
 public class assembler {
+
+	public static String binary_maker(int n)
+	{
+	    String s = "";
+	    while (n > 0)
+	    {
+	        s =  ( (n % 2 ) == 0 ? "0" : "1") +s;
+	        n = n / 2;
+	    }
+	    return s;
+	}
 	public static boolean isNumeric(String str)  
 	{  
 	  try  
@@ -301,11 +312,11 @@ public class assembler {
 
 		    		}
 		    		else {
-                                pass1counter.println(String.format("%x", pccounter));
-		    		symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
-		    		st.put(line_arr[0],String.format("%x", pccounter));
-                                pccounter +=0X1;
-                                }
+	                    pass1counter.println(String.format("%x", pccounter));
+			    		symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
+			    		st.put(line_arr[0],String.format("%x", pccounter));
+	                    pccounter +=0X1;
+                    }
 		    		
 		    	}
 		    	else if (line_type.equals("format4")) {
@@ -508,7 +519,7 @@ public class assembler {
         pass1counter.close();
         littable.close();
 	}
-        public static void pass2(String myfile,Map<String,String>op,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String > OPM) throws FileNotFoundException{
+        public static void pass2(String myfile,Map<String,String>op,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String > OPM,Map<String,String>ltorg) throws FileNotFoundException{
             PrintWriter objectcode;
 			try {
 				objectcode = new PrintWriter("objectcode.txt", "UTF-8");
@@ -536,11 +547,54 @@ public class assembler {
             	}
             		else {
             			System.out.println(line_arr[2]+"\n");
-            			if(!isNumeric(line_arr[1]) && line_arr[2].charAt(0)!='=')
-            			objectcode.write(op.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length())+"\n");
+            			if(!isNumeric(line_arr[1]) ) {
+	            			
+	            				if(line_arr[2].charAt(0)=='@') {
+	            					StringBuilder remover = new StringBuilder(line_arr[2]) ;
+	        		    			remover.deleteCharAt(0);
+	        		    			line_arr[2]=remover.toString();
+	            					int temp=Integer.parseInt(op.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length()));
+	            					String hex = Integer.toString(temp);
+	            					temp = Integer.parseInt(hex,16);
+	            					String temp_string = binary_maker(temp) ;
+	            					
+	            					char[] binary_rep = temp_string.toCharArray();
+	            					binary_rep[6] = '1' ;
+	            					String object_code = new String(binary_rep);
+	            					int temp_conversion = Integer.parseInt(object_code,2);
+	            					object_code= String.format("%x", temp_conversion);
+	            					
+		            				objectcode.write(object_code+"\n");
 
+	            				
+	            				
+		            			}
+		            			else if( line_arr[2].charAt(0)=='=') {
+		            				objectcode.write(op.get(line_arr[1])+sappender4(ltorg.get(line_arr[2]),ltorg.get(line_arr[2]).length())+"\n");
+		            			}
+		            			else if(line_arr[2].charAt(0)=='#') {
+	            					StringBuilder remover = new StringBuilder(line_arr[2]) ;
+	        		    			remover.deleteCharAt(0);
+	        		    			line_arr[2]=remover.toString();
+	            					int temp=Integer.parseInt(op.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length()));
+	            					String hex = Integer.toString(temp);
+	            					temp = Integer.parseInt(hex,16);
+	            					String temp_string = binary_maker(temp) ;
+	            					
+	            					char[] binary_rep = temp_string.toCharArray();
+	            					binary_rep[7] = '1' ;
+	            					String object_code = new String(binary_rep);
+	            					int temp_conversion = Integer.parseInt(object_code,2);
+	            					object_code= String.format("%x", temp_conversion);
+	            					
+		            				objectcode.write(object_code+"\n");
+
+	            				
+	            				
+		            			}
+            			}
             		}
-             		
+             		//objectcode.write(op.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length())+"\n");
              		//String opcodevar = op.get(line_arr[1])+sappender4(st.get(line_arr[0]));
              		//objectcode.write(opcodevar); 
              		
@@ -847,7 +901,7 @@ public class assembler {
                OPM.put("SVC", "B0");
                OPM.put("TIXR", "B8");
                pass1(myfile,ST,OP_1,OP_2,temp_lit,LTORG);
-               pass2(myfile,OP,ST,OP_1,OP_2,temp_lit,OPM);
+               pass2(myfile,OP,ST,OP_1,OP_2,temp_lit,OPM,LTORG);
                System.out.println("fin");
 
 	}
