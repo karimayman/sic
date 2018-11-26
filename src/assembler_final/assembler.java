@@ -44,13 +44,22 @@ public class assembler {
 			System.out.println(ascii);*/
 		String ascii=""; 
 	    byte[] bytes = value.getBytes("US-ASCII");
-	    if(string_length==3)
-	    	ascii = Integer.toString(bytes[0])+Integer.toString(bytes[1])+Integer.toString(bytes[2]);
-	    else if(string_length==2)
-		     ascii = Integer.toString(bytes[0])+Integer.toString(bytes[1]);
-	    else if(string_length==1)
-		     ascii = Integer.toString(bytes[0]);
-	    
+	    if(string_length==3) {
+	    	int ascii1 =bytes[0];
+	    	int ascii2 = bytes[1];
+	    	int ascii3 = bytes[2];
+	    	ascii = String.format("%x",ascii1)+String.format("%x",ascii2)+String.format("%x",ascii3);
+	    }
+	    else if(string_length==2) {
+	    	int ascii1 =bytes[0];
+	    	int ascii2 =bytes[1];
+	    	ascii = String.format("%x",ascii1)+String.format("%x",ascii2);
+	    }
+	    							
+	    else if(string_length==1) {
+	    	int ascii1 = bytes[0];
+	    	String.format("%x",ascii);
+	    }
 		    
 		return ascii;
 	}
