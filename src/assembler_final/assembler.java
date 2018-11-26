@@ -44,13 +44,22 @@ public class assembler {
 			System.out.println(ascii);*/
 		String ascii=""; 
 	    byte[] bytes = value.getBytes("US-ASCII");
-	    if(string_length==3)
-	    	ascii = Integer.toString(bytes[0])+Integer.toString(bytes[1])+Integer.toString(bytes[2]);
-	    else if(string_length==2)
-		     ascii = Integer.toString(bytes[0])+Integer.toString(bytes[1]);
-	    else if(string_length==1)
-		     ascii = Integer.toString(bytes[0]);
-	    
+	    if(string_length==3) {
+	    	int ascii1 =bytes[0];
+	    	int ascii2 = bytes[1];
+	    	int ascii3 = bytes[2];
+	    	ascii = String.format("%x",ascii1)+String.format("%x",ascii2)+String.format("%x",ascii3);
+	    }
+	    else if(string_length==2) {
+	    	int ascii1 =bytes[0];
+	    	int ascii2 =bytes[1];
+	    	ascii = String.format("%x",ascii1)+String.format("%x",ascii2);
+	    }
+	    							
+	    else if(string_length==1) {
+	    	int ascii1 = bytes[0];
+	    	String.format("%x",ascii);
+	    }
 		    
 		return ascii;
 	}
@@ -334,6 +343,7 @@ public class assembler {
 		    	}
 		    	else if(line_type.equals("ltorg")||line_type.equals("end")) {
 		    		if(!temp_lit.isEmpty()) {
+		    			
 		    			for (int i=0;i<temp_lit.size();i++) {
 		    				String temp_holder = temp_lit.get(i);
 		    				if(temp_holder.charAt(1)=='X') {
@@ -343,11 +353,12 @@ public class assembler {
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(temp_holder.length()-4);
 				    			temp_holder=(remover.toString());
-				    			littable.println(" "+temp_lit.get(i)+" "+temp_holder.length()+" "+String.format("%x", pccounter)+"\n");
 				    			double size=(double) temp_holder.length()/2;
 				    			size = Math.ceil(size);
 				    			int inted_size= (int) size;	
+				    			String string_size= Integer.toString(inted_size);
 				    			pccounter=pccounter+(inted_size);
+				    			littable.println(temp_lit.get(i)+" "+temp_holder+" "+string_size+" "+String.format("%x", pccounter));
 				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
 	                        
 		    				}
@@ -356,10 +367,10 @@ public class assembler {
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(0);
-				    			
 				    			remover.deleteCharAt(temp_holder.length()-4);
 				    			temp_holder=(remover.toString());
-				    			littable.println(" "+temp_lit.get(i)+" "+temp_holder.length()+" "+String.format("%x", pccounter)+"\n");
+				    			String value = ascii_maker(temp_holder,temp_holder.length());
+				    			littable.println(temp_lit.get(i)+" "+value+" "+temp_holder.length()+" "+String.format("%x", pccounter));
 				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
 				    			int inted_size=temp_holder.length();	
 				    			pccounter=pccounter+(inted_size);
@@ -369,7 +380,7 @@ public class assembler {
 		    					StringBuilder remover = new StringBuilder(temp_holder) ;
 				    			temp_holder = remover.deleteCharAt(0).toString();
 				    		
-		    					littable.println(" "+temp_lit.get(i)+" "+temp_holder.length()+" "+String.format("%x", pccounter)+"\n");
+		    					littable.println(temp_lit.get(i)+" "+String.format("%x",temp_holder)+" "+temp_holder.length()+" "+String.format("%x", pccounter));
 		    					ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
 		    					System.out.println(temp_lit.get(i));
 		    					String temp1= String.format("%x", temp_lit.get(i));
@@ -378,14 +389,17 @@ public class assembler {
 		    				}
 		    			}
 		    			temp_lit.clear();
+		    			}
 		    		}
-		    	}
+
 		    	else if (line_type.equals("equ")) {
+		    		 
 		    		 pass1counter.println(String.format("%x", pccounter));
 		    		 if(line_arr[2].charAt(0)=='*') {
+		    			
 		    		 st.put(line_arr[0],String.format("%x", pccounter));
 		    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
-		    		 st.put(line_arr[0],String.format("%x", pccounter) );
+		    		 st.put(line_arr[0],String.format("%x", pccounter));
 		    		 }
 		    		/* else if(line_arr[2].charAt(0)=='=') {
 			    		 st.put(line_arr[0],String.format("%x", pccounter));
@@ -399,27 +413,48 @@ public class assembler {
 		    					System.out.println(subs1);
 		    					String subs2 = line_arr[2].substring(place+1,line_arr[2].length() );
 		    					System.out.println(subs2);
+		    					if(!isNumeric(subs2)) {
 		    					int op1 = Integer.parseInt( st.get(subs1),16);
 		    					int op2 = Integer.parseInt( st.get(subs2),16);
 		    					int result = op1-op2;
 		    					String result_s= String.format("%x", result);
 		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
 		    					st.put(line_arr[0], result_s);
-		    				}
+		    						}
+		    					else {
+		    						int op1 = Integer.parseInt( st.get(subs1),16);
+		    						int op2 = Integer.parseInt( subs2);
+		    						int result = op1-op2;
+		    						String result_s= String.format("%x", result);
+			    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
+			    					st.put(line_arr[0], result_s);
+		    					}
+		    					}
 		    				else if(line_arr[2].indexOf('+')>0) {
 		    					int place =line_arr[2].indexOf('+');
 		    					String subs1 = line_arr[2].substring(0, place);
 		    					String subs2 = line_arr[2].substring(place+1,line_arr[2].length() );
-		    					int op1 = Integer.parseInt(String.format("%x", st.get(subs1)));
-		    					int op2 = Integer.parseInt(String.format("%x", st.get(subs2)));
+		    					if(!isNumeric(subs2)) {
+		    					int op1 = Integer.parseInt( st.get(subs1),16);
+		    					int op2 = Integer.parseInt( st.get(subs2),16);
 		    					int result = op1+op2;
 		    					String result_s= String.format("%x", result);
 		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
 		    					st.put(line_arr[0], result_s);
+		    						}
+		    					
+		    				else {
+	    						int op1 = Integer.parseInt( st.get(subs1),16);
+	    						int op2 = Integer.parseInt(subs2);
+	    						int result = op1+op2;
+	    						String result_s= String.format("%x", result);
+		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
+		    					st.put(line_arr[0], result_s);
 		    					}
-		    		 		}
+		    				}
 		    				else if(st.containsKey(line_arr[2])) {
 		    					String temp_holding = st.get(line_arr[2]);
+		    					
 		    					symboltablewriter.println(line_arr[0]+ "	"+temp_holding);
 		    					st.put(line_arr[0], temp_holding);
 		    				}
@@ -428,15 +463,16 @@ public class assembler {
 		    		 else {
 		    			 st.put(line_arr[0],String.format("%x", Integer.parseInt(line_arr[2])));
 		    		 	 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x",line_arr[2]));
+		    		 	 
 		    		 	st.put(line_arr[0], String.format("%x", line_arr[2]));
-		    		 	}
+		    		 	}	
 		    		 }
-		    	
-		
+		    	}
 		    	else if (line_type.equals("RESB")){
                                 pass1counter.println(String.format("%x", pccounter));
 		    		//String pc = Integer.toString(pccounter);
 		    		symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
+		    		System.out.println(line_arr[0]+ "	"+String.format("%x", pccounter));
                                 st.put(line_arr[0],String.format("%x", pccounter));
                                 pccounter =pccounter + (Integer.parseInt(line_arr[2]));
 
@@ -455,8 +491,8 @@ public class assembler {
 		    	
 		    	}
 		    	
+		    
 		    }
-			
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
