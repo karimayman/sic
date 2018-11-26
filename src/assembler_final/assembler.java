@@ -343,7 +343,7 @@ public class assembler {
 		    	}
 		    	else if(line_type.equals("ltorg")||line_type.equals("end")) {
 		    		if(!temp_lit.isEmpty()) {
-		    			
+		    			pass1counter.println(String.format("%x", pccounter));
 		    			for (int i=0;i<temp_lit.size();i++) {
 		    				String temp_holder = temp_lit.get(i);
 		    				if(temp_holder.charAt(1)=='X') {
@@ -400,6 +400,7 @@ public class assembler {
 		    		 st.put(line_arr[0],String.format("%x", pccounter));
 		    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
 		    		 st.put(line_arr[0],String.format("%x", pccounter));
+		    		 pass1counter.println(String.format("%x", pccounter));
 		    		 }
 		    		/* else if(line_arr[2].charAt(0)=='=') {
 			    		 st.put(line_arr[0],String.format("%x", pccounter));
@@ -420,6 +421,7 @@ public class assembler {
 		    					String result_s= String.format("%x", result);
 		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
 		    					st.put(line_arr[0], result_s);
+		    					
 		    						}
 		    					else {
 		    						int op1 = Integer.parseInt( st.get(subs1),16);
@@ -428,6 +430,7 @@ public class assembler {
 		    						String result_s= String.format("%x", result);
 			    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
 			    					st.put(line_arr[0], result_s);
+			    				
 		    					}
 		    					}
 		    				else if(line_arr[2].indexOf('+')>0) {
@@ -441,6 +444,7 @@ public class assembler {
 		    					String result_s= String.format("%x", result);
 		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
 		    					st.put(line_arr[0], result_s);
+		    					
 		    						}
 		    					
 		    				else {
@@ -450,6 +454,7 @@ public class assembler {
 	    						String result_s= String.format("%x", result);
 		    					symboltablewriter.println(line_arr[0]+ "	"+result_s);
 		    					st.put(line_arr[0], result_s);
+		    					
 		    					}
 		    				}
 		    				else if(st.containsKey(line_arr[2])) {
@@ -457,6 +462,7 @@ public class assembler {
 		    					
 		    					symboltablewriter.println(line_arr[0]+ "	"+temp_holding);
 		    					st.put(line_arr[0], temp_holding);
+		    					
 		    				}
 		    				 
 		    			 
@@ -465,9 +471,9 @@ public class assembler {
 		    		 	 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x",line_arr[2]));
 		    		 	 
 		    		 	st.put(line_arr[0], String.format("%x", line_arr[2]));
-		    		 	}	
-		    		 }
+		    		 }	
 		    	}
+		   }
 		    	else if (line_type.equals("RESB")){
                                 pass1counter.println(String.format("%x", pccounter));
 		    		//String pc = Integer.toString(pccounter);
