@@ -760,7 +760,7 @@ public class assembler {
 		    			remover.deleteCharAt(0);
 		    			line_arr[2]=remover.toString();
 		    			if(!isNumeric(line_arr[2]) ) {
-    					int temp=Integer.parseInt(OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length()));
+    					int temp=Integer.parseInt(OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length()));
     					String hex = Integer.toString(temp);
     					temp = Integer.parseInt(hex,16);
     					String temp_string = binary_maker(temp);
@@ -777,14 +777,14 @@ public class assembler {
 		    			}
     				}
         			else if( line_arr[2].charAt(0)=='=') {
-        				objectcode.write(OPM.get(line_arr[1])+sappender4(ltorg.get(line_arr[2]),ltorg.get(line_arr[2]).length())+"\n");
+        				objectcode.write(OPM.get(line_arr[1])+sappender6(ltorg.get(line_arr[2]),ltorg.get(line_arr[2]).length())+"\n");
         			}
         			else if(line_arr[2].charAt(0)=='#') {
     					StringBuilder remover = new StringBuilder(line_arr[2]) ;
 		    			remover.deleteCharAt(0);
 		    			line_arr[2]=remover.toString();
 		    			if(!isNumeric(line_arr[2])) {
-        					int temp=Integer.parseInt(OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length()));
+        					int temp=Integer.parseInt(OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length()));
         					String hex = Integer.toString(temp);
         					temp = Integer.parseInt(hex,16);
         					String temp_string = binary_maker(temp) ;
@@ -801,7 +801,7 @@ public class assembler {
 		    				objectcode.write(OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");
 		    			}
 		    			else {
-		    				int temp=Integer.parseInt(OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length()),16);
+		    				int temp=Integer.parseInt(OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length()),16);
         					String hex = Integer.toString(temp);
         					temp = Integer.parseInt(hex,16);
         					String temp_string = binary_maker(temp) ;
@@ -834,7 +834,7 @@ public class assembler {
 		    			remover.deleteCharAt(0);
 		    			line_arr[1]=remover.toString();
 		    			if(!isNumeric(line_arr[1]) ) {
-    					int temp=Integer.parseInt(OPM.get(line_arr[0])+sappender4(st.get(line_arr[1]),st.get(line_arr[1]).length()));
+    					int temp=Integer.parseInt(OPM.get(line_arr[0])+sappender6(st.get(line_arr[1]),st.get(line_arr[1]).length()));
     					String hex = Integer.toString(temp);
     					temp = Integer.parseInt(hex,16);
     					String temp_string = binary_maker(temp);
@@ -851,14 +851,14 @@ public class assembler {
 		    			}
     				}
         			else if( line_arr[1].charAt(0)=='=') {
-        				objectcode.write(OPM.get(line_arr[0])+sappender4(ltorg.get(line_arr[1]),ltorg.get(line_arr[1]).length())+"\n");
+        				objectcode.write(OPM.get(line_arr[0])+sappender6(ltorg.get(line_arr[1]),ltorg.get(line_arr[1]).length())+"\n");
         			}
         			else if(line_arr[1].charAt(0)=='#') {
     					StringBuilder remover = new StringBuilder(line_arr[1]) ;
 		    			remover.deleteCharAt(0);
 		    			line_arr[1]=remover.toString();
 		    			if(!isNumeric(line_arr[1])) {
-        					int temp=Integer.parseInt(OPM.get(line_arr[0])+sappender4(st.get(line_arr[1]),st.get(line_arr[1]).length()));
+        					int temp=Integer.parseInt(OPM.get(line_arr[0])+sappender6(st.get(line_arr[1]),st.get(line_arr[1]).length()));
         					String hex = Integer.toString(temp);
         					temp = Integer.parseInt(hex,16);
         					String temp_string = binary_maker(temp) ;
@@ -875,7 +875,7 @@ public class assembler {
 		    				objectcode.write(OPM.get(line_arr[0])+sappender6(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");
 		    			}
 		    			else {
-		    				int temp=Integer.parseInt(OPM.get(line_arr[0])+sappender4(st.get(line_arr[1]),st.get(line_arr[1]).length()),16);
+		    				int temp=Integer.parseInt(OPM.get(line_arr[0])+sappender6(st.get(line_arr[1]),st.get(line_arr[1]).length()),16);
         					String hex = Integer.toString(temp);
         					temp = Integer.parseInt(hex,16);
         					String temp_string = binary_maker(temp) ;
@@ -932,7 +932,7 @@ public class assembler {
 				objectcode.write(object_code+"\n");
     			}
     			else if(isNumeric(line_arr[1])) {
-    				objectcode.write(OPM.get(line_arr[0])+sappender6(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");	
+    				objectcode.write(OPM.get(line_arr[0])+sappender4(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");	
     			}
 			}
 			else if( line_arr[1].charAt(0)=='=') {
