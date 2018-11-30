@@ -21,13 +21,25 @@ import java.util.logging.Logger;
 
 public class assembler {
 
-	public static String binary_maker(int n)
+	public static String binary_maker(String hex)
 	{
 	    String s = "";
-	    while (n > 0)
-	    {
-	        s =  ( (n % 2 ) == 0 ? "0" : "1") +s;
-	        n = n / 2;
+		 String[] staticLookup = new String[]
+				    {"0000","0001","0010","0011","0100","0101","0110","0111",
+				     "1000","1001","1010","1011","1100","1101","1110","1111"};
+		 	int temp_bin;
+		 	String another= "";
+		 	String st = "";
+		 	String edited = "";
+		 	edited=hex;
+		 	StringBuilder charremover = new StringBuilder(edited) ;
+			char Hex;
+	    for(int i =0; i<hex.length();i++)
+	    {	
+	         Hex = edited.charAt(0);
+	         s= s+staticLookup[Integer.parseInt(Character.toString(Hex), 16)];
+	         charremover.deleteCharAt(0);
+			 edited=charremover.toString();
 	    }
 	    return s;
 	}
@@ -412,7 +424,6 @@ public class assembler {
 				    		
 		    					littable.println(temp_lit.get(i)+" "+String.format("%x",temp_holder)+" "+temp_holder.length()+" "+String.format("%x", pccounter));
 		    					ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
-		    					System.out.println(temp_lit.get(i));
 		    					String temp1= String.format("%x", temp_lit.get(i));
 		    					int temp2 = Integer.parseInt(temp1,16);
 		    					pccounter=pccounter+temp2;
@@ -441,9 +452,7 @@ public class assembler {
 		    				if(line_arr[2].indexOf('-')>0) {
 		    					int place =line_arr[2].indexOf('-');
 		    					String subs1 = line_arr[2].substring(0, place);
-		    					System.out.println(subs1);
 		    					String subs2 = line_arr[2].substring(place+1,line_arr[2].length() );
-		    					System.out.println(subs2);
 		    					if(!isNumeric(subs2)) {
 		    					int op1 = Integer.parseInt( st.get(subs1),16);
 		    					int op2 = Integer.parseInt( st.get(subs2),16);
@@ -508,7 +517,6 @@ public class assembler {
                                 pass1counter.println(String.format("%x", pccounter));
 		    		//String pc = Integer.toString(pccounter);
 		    		symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
-		    		System.out.println(line_arr[0]+ "	"+String.format("%x", pccounter));
                                 st.put(line_arr[0],String.format("%x", pccounter));
                                 pccounter =pccounter + (Integer.parseInt(line_arr[2]));
 
@@ -571,9 +579,9 @@ public class assembler {
 	        		    			remover.deleteCharAt(0);
 	        		    			line_arr[2]=remover.toString();
 	        		    			if(!isNumeric(line_arr[2]) ) {
-	            					int temp=Integer.parseInt(OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length()));
-	            					String hex = Integer.toString(temp);
-	            					temp = Integer.parseInt(hex,16);
+	            					String temp=OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
+	            					//String hex = Integer.toString(temp);
+	            					//temp = Integer.parseInt(hex,16);
 	            					String temp_string = binary_maker(temp);
 	            					char[] binary_rep = temp_string.toCharArray();
 	            					binary_rep[6] = '1' ;
@@ -594,9 +602,9 @@ public class assembler {
 	        		    			remover.deleteCharAt(0);
 	        		    			line_arr[2]=remover.toString();
 	        		    			if(!isNumeric(line_arr[2])) {
-		            					int temp=Integer.parseInt(OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length()));
-		            					String hex = Integer.toString(temp);
-		            					temp = Integer.parseInt(hex,16);
+		            					String temp=OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
+		            					//String hex = Integer.toString(temp);
+		            					//temp = Integer.parseInt(hex,16);
 		            					String temp_string = binary_maker(temp) ;
 		            					char[] binary_rep = temp_string.toCharArray();
 		            					binary_rep[7] = '1' ;
@@ -614,17 +622,18 @@ public class assembler {
 				    			else {
 				    				System.out.println(OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length()));
 				    				String temp_ss=OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
-				    				int temp=Integer.parseInt(temp_ss,16);//+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length())
-		        					System.out.println(temp);
+				    				//int temp=Integer.parseInt(temp_ss,16);//+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length())
+		        					//System.out.println(temp);
 				    				/*String hex = Integer.toString(temp);
 		        					temp = Integer.parseInt(hex,16);*/
 		        					//String temp_string = binary_maker(temp) ;
-		        					//char[] binary_rep = temp_string.toCharArray();	
-		        					String binary = Integer.toBinaryString(temp);
+				    				String binary = binary_maker(temp_ss);
+				    				char[] binary_rep = binary.toCharArray();	
+		        					
 		        					System.out.println(binary);
-		        					//binary_rep[6] = '1' ;
-		        					//binary_rep[7] = '1' ;
-		        					String object_code = binary;//new String(binary_rep);
+		        					binary_rep[6] = '1' ;
+		        					binary_rep[7] = '1' ;
+		        					String object_code =  new String(binary_rep);;//new String(binary_rep);
 		        					System.out.println(object_code);
 		        					int temp_conversion = Integer.parseInt(object_code,2);
 		        					object_code= String.format("%x", temp_conversion);
@@ -735,7 +744,6 @@ public class assembler {
 		    	String ascii1_s=String.format("%x", ascii1);
 		    	String ascii2_s=String.format("%x", ascii2);
 		    	ascii=ascii1_s+ascii2_s;
-				   System.out.println(ascii); 
 		    	   objectcode.write( ascii+"\n");
 		    }
 		    else if(iterations-i==1) {
@@ -770,9 +778,9 @@ public class assembler {
 		    			remover.deleteCharAt(0);
 		    			line_arr[2]=remover.toString();
 		    			if(!isNumeric(line_arr[2]) ) {
-    					int temp=Integer.parseInt(OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length()));
-    					String hex = Integer.toString(temp);
-    					temp = Integer.parseInt(hex,16);
+    					String temp=OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length());
+    					//String hex = Integer.toString(temp);
+    					//temp = Integer.parseInt(hex,16);
     					String temp_string = binary_maker(temp);
     					char[] binary_rep = temp_string.toCharArray();
     					binary_rep[6] = '1' ;
@@ -794,9 +802,9 @@ public class assembler {
 		    			remover.deleteCharAt(0);
 		    			line_arr[2]=remover.toString();
 		    			if(!isNumeric(line_arr[2])) {
-        					int temp=Integer.parseInt(OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length()));
-        					String hex = Integer.toString(temp);
-        					temp = Integer.parseInt(hex,16);
+        					String temp=OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length());
+        					//String hex = Integer.toString(temp);
+        					//temp = Integer.parseInt(hex,16);
         					String temp_string = binary_maker(temp) ;
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[7] = '1' ;
@@ -811,9 +819,9 @@ public class assembler {
 		    				objectcode.write(OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");
 		    			}
 		    			else {
-		    				int temp=Integer.parseInt(OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length()),16);
-        					String hex = Integer.toString(temp);
-        					temp = Integer.parseInt(hex,16);
+		    				String temp=OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length());
+        					//String hex = Integer.toString(temp);
+        					//temp = Integer.parseInt(hex,16);
         					String temp_string = binary_maker(temp) ;
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[6] = '1' ;
@@ -847,12 +855,10 @@ public class assembler {
 		    			line_arr[0]=opmremover.toString();
 		    			line_arr[1]=remover.toString();
 		    			if(!isNumeric(line_arr[1]) ) {
-		    				System.out.println(line_arr[1]);
-    					int temp=Integer.parseInt(OPM.get(line_arr[0])+sappender6(st.get(line_arr[1]),st.get(line_arr[1]).length()),16);
-    					System.out.println(temp);
-    					String hex = Integer.toString(temp);
-    					System.out.println(hex);
-    					temp = Integer.parseInt(hex);
+    					String temp=OPM.get(line_arr[0])+sappender6(st.get(line_arr[1]),st.get(line_arr[1]).length());
+    					//String hex = Integer.toString(temp);
+    					//System.out.println(hex);
+    					//temp = Integer.parseInt(hex);
     					String temp_string = binary_maker(temp);
     					System.out.println(temp_string);
     					char[] binary_rep = temp_string.toCharArray();
@@ -877,9 +883,9 @@ public class assembler {
 		    			remover.deleteCharAt(0);
 		    			line_arr[1]=remover.toString();
 		    			if(!isNumeric(line_arr[1])) {
-        					int temp=Integer.parseInt(OPM.get(line_arr[0])+sappender6(st.get(line_arr[1]),st.get(line_arr[1]).length()));
-        					String hex = Integer.toString(temp);
-        					temp = Integer.parseInt(hex,16);
+        					String temp=OPM.get(line_arr[0])+sappender6(st.get(line_arr[1]),st.get(line_arr[1]).length());
+        					//String hex = Integer.toString(temp);
+        					//temp = Integer.parseInt(hex,16);
         					String temp_string = binary_maker(temp) ;
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[7] = '1' ;
@@ -894,9 +900,9 @@ public class assembler {
 		    				objectcode.write(OPM.get(line_arr[0])+sappender6(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");
 		    			}
 		    			else {
-		    				int temp=Integer.parseInt(OPM.get(line_arr[0])+sappender6(st.get(line_arr[1]),st.get(line_arr[1]).length()),16);
-        					String hex = Integer.toString(temp);
-        					temp = Integer.parseInt(hex,16);
+		    				String temp=OPM.get(line_arr[0])+sappender6(st.get(line_arr[1]),st.get(line_arr[1]).length());
+        					//String hex = Integer.toString(temp);
+        					//temp = Integer.parseInt(hex,16);
         					String temp_string = binary_maker(temp) ;
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[6] = '1' ;
@@ -939,9 +945,9 @@ public class assembler {
     			remover.deleteCharAt(0);
     			line_arr[1]=remover.toString();
     			if(!isNumeric(line_arr[1]) ) {
-				int temp=Integer.parseInt(OPM.get(line_arr[0])+sappender4(st.get(line_arr[1]),st.get(line_arr[1]).length()));
-				String hex = Integer.toString(temp);
-				temp = Integer.parseInt(hex,16);
+				String temp=OPM.get(line_arr[0])+sappender4(st.get(line_arr[1]),st.get(line_arr[1]).length());
+				//String hex = Integer.toString(temp);
+				//temp = Integer.parseInt(hex,16);
 				String temp_string = binary_maker(temp);
 				char[] binary_rep = temp_string.toCharArray();
 				binary_rep[6] = '1' ;
@@ -962,9 +968,9 @@ public class assembler {
     			remover.deleteCharAt(0);
     			line_arr[1]=remover.toString();
     			if(!isNumeric(line_arr[1])) {
-					int temp=Integer.parseInt(OPM.get(line_arr[0])+sappender4(st.get(line_arr[1]),st.get(line_arr[1]).length()));
-					String hex = Integer.toString(temp);
-					temp = Integer.parseInt(hex,16);
+					String temp=OPM.get(line_arr[0])+sappender4(st.get(line_arr[1]),st.get(line_arr[1]).length());
+					//String hex = Integer.toString(temp);
+					//temp = Integer.parseInt(hex,16);
 					String temp_string = binary_maker(temp) ;
 					char[] binary_rep = temp_string.toCharArray();
 					binary_rep[7] = '1' ;
