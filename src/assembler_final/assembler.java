@@ -589,7 +589,7 @@ public class assembler {
     						binary_rep[7] = '1' ;
     					}
     					binary_rep[8] = '1' ;
-    					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+    					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
     						binary_rep[10]='1';
     					}
     					else {
@@ -613,7 +613,7 @@ public class assembler {
 	            					String temp_string = binary_maker(temp);
 	            					char[] binary_rep = temp_string.toCharArray();
 	            					binary_rep[6] = '1' ;
-	            					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+	            					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
 	            						binary_rep[10]='1';
 	            					}
 	            					else {
@@ -642,7 +642,7 @@ public class assembler {
 		            					String temp_string = binary_maker(temp) ;
 		            					char[] binary_rep = temp_string.toCharArray();
 		            					binary_rep[7] = '1' ;
-		            					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+		            					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
 		            						binary_rep[10]='1';
 		            					}
 		            					else {
@@ -815,8 +815,36 @@ public class assembler {
 			String instruction_helper = String.format("%x", indexed);
 			objectcode.write(OPM.get(line_arr[0])+sappender4(instruction_helper,instruction_helper.length())+"\n");
 	}
-		else {*/
-			if(!isNumeric(line_arr[2]) ) {
+		else {*/if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X'&&line_arr[2].charAt(line_arr[2].length()-2 )== ',' ) {
+			//int indexed = Integer.parseInt(st.get(line_arr[1]),16)+ 32768;
+			//String instruction_helper = String.format("%x", indexed);
+			//objectcode.write(OPM.get(line_arr[0])+sappender4(instruction_helper,instruction_helper.length())+"\n");
+ 			StringBuilder remover = new StringBuilder(line_arr[2]) ;
+			remover.deleteCharAt(line_arr[2].length()-1);
+			remover.deleteCharAt(line_arr[2].length()-2);
+			line_arr[2]=remover.toString();
+ 			String temp=OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
+			String temp_string = binary_maker(temp);
+			char[] binary_rep = temp_string.toCharArray();
+			if(line_arr[1].charAt(0)=='@') {
+			binary_rep[6] = '1' ;
+			}
+			else if(line_arr[1].charAt(0)=='#') {
+				binary_rep[7] = '1' ;
+				}
+			else {
+				binary_rep[6] = '1' ;
+				binary_rep[7] = '1' ;
+			}
+			binary_rep[8] = '1' ;
+			if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
+				binary_rep[10]='1';
+			}
+			else {
+				binary_rep[9]='1';
+			}
+		}
+	    	else if(!isNumeric(line_arr[2]) ) {
     				if(line_arr[2].charAt(0)=='@') {
     					StringBuilder remover = new StringBuilder(line_arr[2]) ;
 		    			remover.deleteCharAt(0);
@@ -829,7 +857,7 @@ public class assembler {
     					char[] binary_rep = temp_string.toCharArray();
     					binary_rep[6] = '1' ;
     					binary_rep[11] = '1' ;
-    					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+    					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
     						binary_rep[10]='1';
     					}
     					else {
@@ -859,7 +887,7 @@ public class assembler {
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[7] = '1' ;
         					binary_rep[11] = '1' ;
-        					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+        					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
         						binary_rep[10]='1';
         					}
         					else {
@@ -882,7 +910,7 @@ public class assembler {
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[6] = '1' ;
         					binary_rep[7] = '1' ;
-        					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+        					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
         						binary_rep[10]='1';
         					}
         					else {
