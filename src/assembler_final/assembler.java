@@ -568,10 +568,38 @@ public class assembler {
                     checker = Character.toString(line_arr[2].charAt(0));
              	if (line_type.equals("label")){
              		if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X'&&line_arr[2].charAt(line_arr[2].length()-2 )== ',' ) {
-            			int indexed = Integer.parseInt(st.get(line_arr[1]),16)+ 32768;
-            			String instruction_helper = String.format("%x", indexed);
-            			objectcode.write(OPM.get(line_arr[0])+sappender4(instruction_helper,instruction_helper.length())+"\n");
-            	}
+            			//int indexed = Integer.parseInt(st.get(line_arr[1]),16)+ 32768;
+            			//String instruction_helper = String.format("%x", indexed);
+            			//objectcode.write(OPM.get(line_arr[0])+sappender4(instruction_helper,instruction_helper.length())+"\n");
+             			StringBuilder remover = new StringBuilder(line_arr[2]) ;
+		    			remover.deleteCharAt(line_arr[2].length()-1);
+		    			remover.deleteCharAt(line_arr[2].length()-2);
+		    			line_arr[2]=remover.toString();
+             			String temp=OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
+    					String temp_string = binary_maker(temp);
+    					char[] binary_rep = temp_string.toCharArray();
+    					if(line_arr[1].charAt(0)=='@') {
+    					binary_rep[6] = '1' ;
+    					}
+    					else if(line_arr[1].charAt(0)=='#') {
+        					binary_rep[7] = '1' ;
+        					}
+    					else {
+    						binary_rep[6] = '1' ;
+    						binary_rep[7] = '1' ;
+    					}
+    					binary_rep[8] = '1' ;
+    					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+    						binary_rep[10]='1';
+    					}
+    					else {
+    						binary_rep[9]='1';
+    					}
+    					String object_code = new String(binary_rep);
+    					int temp_conversion = Integer.parseInt(object_code,2);
+    					object_code= String.format("%x", temp_conversion);
+        				objectcode.write(object_code+"\n");
+             		}
             		else {
             			if(!isNumeric(line_arr[2]) ) {
 	            				if(line_arr[2].charAt(0)=='@') {
@@ -585,6 +613,12 @@ public class assembler {
 	            					String temp_string = binary_maker(temp);
 	            					char[] binary_rep = temp_string.toCharArray();
 	            					binary_rep[6] = '1' ;
+	            					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+	            						binary_rep[10]='1';
+	            					}
+	            					else {
+	            						binary_rep[9]='1';
+	            					}
 	            					String object_code = new String(binary_rep);
 	            					int temp_conversion = Integer.parseInt(object_code,2);
 	            					object_code= String.format("%x", temp_conversion);
@@ -608,6 +642,12 @@ public class assembler {
 		            					String temp_string = binary_maker(temp) ;
 		            					char[] binary_rep = temp_string.toCharArray();
 		            					binary_rep[7] = '1' ;
+		            					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+		            						binary_rep[10]='1';
+		            					}
+		            					else {
+		            						binary_rep[9]='1';
+		            					}
 		            					String object_code = new String(binary_rep);
 		            					int temp_conversion = Integer.parseInt(object_code,2);
 		            					object_code= String.format("%x", temp_conversion);
@@ -630,11 +670,15 @@ public class assembler {
 				    				String binary = binary_maker(temp_ss);
 				    				char[] binary_rep = binary.toCharArray();	
 		        					
-		        					System.out.println(binary);
 		        					binary_rep[6] = '1' ;
 		        					binary_rep[7] = '1' ;
+		        					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+	            						binary_rep[10]='1';
+	            					}
+	            					else {
+	            						binary_rep[9]='1';
+	            					}
 		        					String object_code =  new String(binary_rep);;//new String(binary_rep);
-		        					System.out.println(object_code);
 		        					int temp_conversion = Integer.parseInt(object_code,2);
 		        					object_code= String.format("%x", temp_conversion);
 		        					System.out.println(object_code);
@@ -686,7 +730,7 @@ public class assembler {
 			objectcode.write(line_arr[2]+"\n");
 			
         }
-
+        		
 		else if(checker.equals("C")) {
 			/*StringBuilder remover = new StringBuilder(line_arr[2]) ;
 			remover.deleteCharAt(0);
@@ -785,6 +829,12 @@ public class assembler {
     					char[] binary_rep = temp_string.toCharArray();
     					binary_rep[6] = '1' ;
     					binary_rep[11] = '1' ;
+    					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+    						binary_rep[10]='1';
+    					}
+    					else {
+    						binary_rep[9]='1';
+    					}
     					String object_code = new String(binary_rep);
     					int temp_conversion = Integer.parseInt(object_code,2);
     					object_code= String.format("%x", temp_conversion);
@@ -809,6 +859,12 @@ public class assembler {
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[7] = '1' ;
         					binary_rep[11] = '1' ;
+        					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+        						binary_rep[10]='1';
+        					}
+        					else {
+        						binary_rep[9]='1';
+        					}
         					String object_code = new String(binary_rep);
         					int temp_conversion = Integer.parseInt(object_code,2);
         					object_code= String.format("%x", temp_conversion);
@@ -826,6 +882,12 @@ public class assembler {
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[6] = '1' ;
         					binary_rep[7] = '1' ;
+        					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+        						binary_rep[10]='1';
+        					}
+        					else {
+        						binary_rep[9]='1';
+        					}
         					String object_code = new String(binary_rep);
         					int temp_conversion = Integer.parseInt(object_code,2);
         					object_code= String.format("%x", temp_conversion);
@@ -860,14 +922,12 @@ public class assembler {
     					//System.out.println(hex);
     					//temp = Integer.parseInt(hex);
     					String temp_string = binary_maker(temp);
-    					System.out.println(temp_string);
     					char[] binary_rep = temp_string.toCharArray();
     					binary_rep[6] = '1' ;
     					binary_rep[11] = '1' ;
     					String object_code = new String(binary_rep);
     					int temp_conversion = Integer.parseInt(object_code,2);
     					object_code= String.format("%x", temp_conversion);
-    					System.out.println(object_code);
         				objectcode.write(object_code+"\n");
         				
 		    			}
@@ -920,6 +980,33 @@ public class assembler {
 		// dee taba3 el else el m3 el x flag , uncomment lema tzbt el x flag hena}
 		
 	 }
+	else if (line_type.equals("format2")){
+		//objectcode.write("\n");
+		   if(token.countTokens()>2) {
+			   objectcode.write(OPM.get(line_arr[0])+OPM.get(line_arr[1])+OPM.get(line_arr[2])+"\n");
+		   }
+		   else {
+			   objectcode.write(OPM.get(line_arr[0])+OPM.get(line_arr[1])+"0"+"\n");
+		   }
+		
+	}
+	else if (line_type.equals("format1")){
+		objectcode.write(OPM.get(line_arr[0])+"\n");
+		   	
+	}
+	else if(line_type.equals("format2_label")) {
+		   //if(token.countTokens()>2) {
+			   objectcode.write(OPM.get(line_arr[1])+OPM.get(line_arr[2])+"0"+"\n");
+		 /*  }
+		   else {
+			   objectcode.write(OPM.get(line_arr[1])+"0"+"0"+"\n");
+		   }*/
+	}
+	else if(line_type.equals("format1_label")) {
+		 
+			   objectcode.write(OPM.get(line_arr[1])+"\n");
+		   
+	}
 	else if (line_type.equals("RESB")){
 		//objectcode.write("\n");
 	}
@@ -1151,6 +1238,13 @@ public class assembler {
                OPM.put("SUBR", "94");
                OPM.put("SVC", "B0");
                OPM.put("TIXR", "B8");
+               OPM.put("A", "0");
+               OPM.put("X", "1");
+               OPM.put("L", "2");
+               OPM.put("B", "3");
+               OPM.put("S", "4");
+               OPM.put("T", "5");
+               OPM.put("F", "6");
                pass1(myfile,ST,OP_1,OP_2,temp_lit,LTORG);
                pass2(myfile,OP,ST,OP_1,OP_2,temp_lit,OPM,LTORG);
                System.out.println("fin");
