@@ -672,7 +672,7 @@ public class assembler {
 		        					
 		        					binary_rep[6] = '1' ;
 		        					binary_rep[7] = '1' ;
-		        					if (Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2])) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
+		        					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
 	            						binary_rep[10]='1';
 	            					}
 	            					else {
