@@ -555,7 +555,7 @@ public class assembler {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = "";
             String line_type = "";
-            
+            int destination = 0; 
             try {
                 while ((line = reader.readLine()) != null) {
                     StringTokenizer token = new StringTokenizer(line);
@@ -842,7 +842,16 @@ public class assembler {
 			}
 			else {
 				binary_rep[9]='1';
+				destination=Integer.parseInt(st.get(line_arr[2]),16)-Integer.parseInt("base",16);
+				
 			}
+			String object_code = new String(binary_rep);
+			int temp_conversion = Integer.parseInt(object_code,2);
+			object_code= String.format("%x", temp_conversion);
+			if(binary_rep[9]=='1') {
+			object_code = object_code.charAt(0)+object_code.charAt(1)+object_code.charAt(2)+String.format("%x", destination);
+			}
+			objectcode.write(object_code+"\n");
 		}
 	    	else if(!isNumeric(line_arr[2]) ) {
     				if(line_arr[2].charAt(0)=='@') {
@@ -1280,3 +1289,5 @@ public class assembler {
 	}
 
 }
+//to_do kml el address lema yb2a base 
+//to_do kml el base fel format 4 we format 3 men 8yr label 
