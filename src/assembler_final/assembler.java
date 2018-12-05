@@ -118,7 +118,33 @@ public class assembler {
 		}
 		return zero;
 	}
-	   
+	public static String name_appender(String value,int iteration){
+		String zero = "";
+		if (iteration == 3) {
+			zero="   ";
+			zero =zero+value;
+		}
+		else if(iteration ==2) {
+			zero="    ";
+			zero = zero+value;
+		}
+		else if(iteration ==1) {
+			zero="     ";
+			zero = zero+value;
+		}
+		else if(iteration ==4) {
+			zero="  ";
+			zero = zero+value;
+		}
+		else if(iteration ==5) {
+			zero=" ";
+			zero = zero+value;
+		}
+		else {
+			zero = value;
+		}
+		return zero;
+	}  
 	public static String sappender6(String value,int iteration){
 		String zero = "";
 		if (iteration == 3) {
@@ -265,7 +291,9 @@ public class assembler {
                             checker = Character.toString(line_arr[2].charAt(0));
                         if (line_type.equals("start")){
                              pccounter =Integer.parseInt(line_arr[2],16); 
-                             intialcounter =  pccounter   ;                           
+                             intialcounter =  pccounter   ;
+                             st.put("progstart",String.format("%x", intialcounter));
+                             st.put("progname",line_arr[0]);
                         }
                          
 		    	if (line_type.equals("label")){
@@ -549,7 +577,9 @@ public class assembler {
 		    	
 		    
 		    }
-			
+		    int prglength = pccounter-Integer.parseInt(st.get("progstart"),16);
+			st.put("proglength", String.format("%x",prglength));
+			//System.out.println(st.get("prglength"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -562,7 +592,8 @@ public class assembler {
             PrintWriter objectcode;
 			try {
 				objectcode = new PrintWriter("objectcode.txt", "UTF-8");
-			
+				PrintWriter HTME = new PrintWriter("HTME.txt", "UTF-8");
+				HTME.write("H"+name_appender(st.get("progname"),st.get("progname").length())+sappender6(st.get("progstart"),st.get("progstart").length())+sappender6(st.get("proglength"),st.get("proglength").length())+"\n");
             File file = new File(myfile);
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = "";
@@ -1135,13 +1166,14 @@ public class assembler {
 
 
                 }
+                HTME.write("E"+sappender6(st.get("progstart"),st.get("progstart").length())+"\n");
             } catch (IOException ex) {
                 Logger.getLogger(assembler.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             
             objectcode.close();
-        
+            HTME.close();
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
