@@ -600,6 +600,7 @@ public class assembler {
             String line_type = "";
             int destination = 0; 
             int htme_counter =0;
+            List<String> mrecord = new ArrayList<String>();;
             try {
                 while ((line = reader.readLine()) != null) {
                     StringTokenizer token = new StringTokenizer(line);
@@ -885,6 +886,8 @@ public class assembler {
 			int temp_conversion = Integer.parseInt(object_code,2);
 			object_code= String.format("%x", temp_conversion);
 			objectcode.write(object_code+"\n");
+			int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
+			mrecord.add("M"+String.format("%x", m)+"05");
 		}
 	    	else if(!isNumeric(line_arr[2]) ) {
     				if(line_arr[2].charAt(0)=='@') {
@@ -909,6 +912,8 @@ public class assembler {
     					int temp_conversion = Integer.parseInt(object_code,2);
     					object_code= String.format("%x", temp_conversion);
         				objectcode.write(object_code+"\n");
+        				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
+        				mrecord.add("M"+String.format("%x", m)+"05");
 		    			}
 		    			else if(isNumeric(line_arr[2])) {
 		    				objectcode.write(OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");	
@@ -916,6 +921,8 @@ public class assembler {
     				}
         			else if( line_arr[2].charAt(0)=='=') {
         				objectcode.write(OPM.get(line_arr[1])+sappender6(ltorg.get(line_arr[2]),ltorg.get(line_arr[2]).length())+"\n");
+        				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
+        				mrecord.add("M"+String.format("%x", m)+"05");
         			}
         			else if(line_arr[2].charAt(0)=='#') {
     					StringBuilder remover = new StringBuilder(line_arr[2]) ;
@@ -934,6 +941,8 @@ public class assembler {
         					object_code= String.format("%x", temp_conversion);
         					
             				objectcode.write(object_code+"\n");
+            				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
+            				mrecord.add("M"+String.format("%x", m)+"05");
 		    			}
 		    			else if(isNumeric(line_arr[2])) {
 		    				objectcode.write(OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");
@@ -952,6 +961,8 @@ public class assembler {
         					object_code= String.format("%x", temp_conversion);
         					
             				objectcode.write(object_code+"\n");
+            				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
+            				mrecord.add("M"+String.format("%x", m)+"05");
 
 		    			}
         			}
@@ -990,14 +1001,20 @@ public class assembler {
         				objectcode.write(object_code+"\n");
         				//loccounter.get(i);
         				//i++;
-        				
+        				int m  = Integer.parseInt(loccounter.get(htme_counter),16)+1;
+        				htme_counter++;
+        				mrecord.add("M"+String.format("%x", m)+"05");
 		    			}
 		    			else if(isNumeric(line_arr[1])) {
 		    				objectcode.write(OPM.get(line_arr[0])+sappender6(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");	
+		    				htme_counter++;
 		    			}
     				}
         			else if( line_arr[1].charAt(0)=='=') {
         				objectcode.write(OPM.get(line_arr[0])+sappender6(ltorg.get(line_arr[1]),ltorg.get(line_arr[1]).length())+"\n");
+        				int m  = Integer.parseInt(loccounter.get(htme_counter),16)+1;
+        				htme_counter++;
+        				mrecord.add("M"+String.format("%x", m)+"05");
         			}
         			else if(line_arr[1].charAt(0)=='#') {
     					StringBuilder remover = new StringBuilder(line_arr[1]) ;
@@ -1016,6 +1033,9 @@ public class assembler {
         					object_code= String.format("%x", temp_conversion);
         					
             				objectcode.write(object_code+"\n");
+            				int m  = Integer.parseInt(loccounter.get(htme_counter),16)+1;
+            				htme_counter++;
+            				mrecord.add("M"+String.format("%x", m)+"05");
 		    			}
 		    			else if(isNumeric(line_arr[1])) {
 		    				objectcode.write(OPM.get(line_arr[0])+sappender6(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");
@@ -1033,7 +1053,9 @@ public class assembler {
         					object_code= String.format("%x", temp_conversion);
         					
             				objectcode.write(object_code+"\n");
-
+            				int m  = Integer.parseInt(loccounter.get(htme_counter),16)+1;
+            				htme_counter++;
+            				mrecord.add("M"+String.format("%x", m)+"05");
 		    			}
         			}
     				
