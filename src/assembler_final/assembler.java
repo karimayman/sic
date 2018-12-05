@@ -21,6 +21,14 @@ import java.util.logging.Logger;
 
 public class assembler {
 
+	/*public static String nhex_maker(String hex) {
+		String Hex="";
+		String[] staticLookup = new String[]
+			    {"0000","0001","0010","0011","0100","0101","0110","0111",
+			     "1000","1001","1010","1011","1100","1101","1110","1111"};
+		for(int i =0 ; i<)
+		return Hex;
+	}*/
 	public static String binary_maker(String hex)
 	{
 	    String s = "";
@@ -99,6 +107,25 @@ public class assembler {
 		}
 		return zero;
 	}*/
+	public static String sappender3(String value,int iteration){
+		String zero = "";
+		if (iteration == 3) {
+			zero="";
+			zero =zero+value;
+		}
+		else if(iteration ==2) {
+			zero="0";
+			zero = zero+value;
+		}
+		else if(iteration ==1) {
+			zero="00";
+			zero = zero+value;
+		}
+		else {
+			zero = value;
+		}
+		return zero;
+	}
 	public static String sappender4(String value,int iteration){
 		String zero = "";
 		if (iteration == 3) {
@@ -625,9 +652,11 @@ public class assembler {
     					char[] binary_rep = temp_string.toCharArray();
     					if(line_arr[1].charAt(0)=='@') {
     					binary_rep[6] = '1' ;
+    					binary_rep[7] = '0' ;
     					}
     					else if(line_arr[1].charAt(0)=='#') {
         					binary_rep[7] = '1' ;
+        					binary_rep[6] = '0' ;
         					}
     					else {
     						binary_rep[6] = '1' ;
@@ -652,12 +681,13 @@ public class assembler {
 	        		    			remover.deleteCharAt(0);
 	        		    			line_arr[2]=remover.toString();
 	        		    			if(!isNumeric(line_arr[2]) ) {
-	            					String temp=OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
-	            					//String hex = Integer.toString(temp);
-	            					//temp = Integer.parseInt(hex,16);
+	        		    			int computed = Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(loccounter.get(htme_counter),16)+3);
+		            				
+	        		    			String temp=OPM.get(line_arr[1])+"0";
 	            					String temp_string = binary_maker(temp);
 	            					char[] binary_rep = temp_string.toCharArray();
 	            					binary_rep[6] = '1' ;
+	            					binary_rep[7] = '0' ;
 	            					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
 	            						binary_rep[10]='1';
 	            					}
@@ -665,9 +695,18 @@ public class assembler {
 	            						binary_rep[9]='1';
 	            					}
 	            					String object_code = new String(binary_rep);
-	            					int temp_conversion = Integer.parseInt(object_code,2);
+	            					int temp_conversion =  Integer.parseInt((object_code),2);
 	            					object_code= String.format("%x", temp_conversion);
-		            				objectcode.write(object_code+"\n");
+	            					if(computed<0) {
+	            					String computed_hex = String.format("%x", computed);
+	            					computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
+	            					
+	            					objectcode.write(object_code+computed_hex+"\n");
+	            					}
+	            					else {
+		            					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
+		            					
+	            					}
 	        		    			}
 	        		    			else if(isNumeric(line_arr[2])) {
 	        		    				objectcode.write(OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");	
@@ -677,57 +716,77 @@ public class assembler {
 		            				objectcode.write(OPM.get(line_arr[1])+sappender4(ltorg.get(line_arr[2]),ltorg.get(line_arr[2]).length())+"\n");
 		            			}
 		            			else if(line_arr[2].charAt(0)=='#') {
-	            					StringBuilder remover = new StringBuilder(line_arr[2]) ;
+		            				StringBuilder remover = new StringBuilder(line_arr[2]) ;
 	        		    			remover.deleteCharAt(0);
 	        		    			line_arr[2]=remover.toString();
-	        		    			if(!isNumeric(line_arr[2])) {
-		            					String temp=OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
-		            					//String hex = Integer.toString(temp);
-		            					//temp = Integer.parseInt(hex,16);
-		            					String temp_string = binary_maker(temp) ;
-		            					char[] binary_rep = temp_string.toCharArray();
-		            					binary_rep[7] = '1' ;
-		            					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
-		            						binary_rep[10]='1';
-		            					}
-		            					else {
-		            						binary_rep[9]='1';
-		            					}
-		            					String object_code = new String(binary_rep);
-		            					int temp_conversion = Integer.parseInt(object_code,2);
-		            					object_code= String.format("%x", temp_conversion);
-		            					
-			            				objectcode.write(object_code+"\n");
-	        		    			}
-	        		    			else if(isNumeric(line_arr[2])) {
-	        		    				objectcode.write(OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");
-	        		    			}
-		            			}
-	            				
-				    			else {
-				    				System.out.println(OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length()));
-				    				String temp_ss=OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
-				    				//int temp=Integer.parseInt(temp_ss,16);//+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length())
-		        					//System.out.println(temp);
-				    				/*String hex = Integer.toString(temp);
-		        					temp = Integer.parseInt(hex,16);*/
-		        					//String temp_string = binary_maker(temp) ;
-				    				String binary = binary_maker(temp_ss);
-				    				char[] binary_rep = binary.toCharArray();	
-		        					
-		        					binary_rep[6] = '1' ;
-		        					binary_rep[7] = '1' ;
-		        					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
+	        		    			if(!isNumeric(line_arr[2]) ) {
+	        		    			int computed = Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(loccounter.get(htme_counter),16)+3);
+		            				
+	        		    			String temp=OPM.get(line_arr[1])+"0";
+	            					String temp_string = binary_maker(temp);
+	            					char[] binary_rep = temp_string.toCharArray();
+	            					binary_rep[6] = '0' ;
+	            					binary_rep[7] = '1' ;
+	            					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
 	            						binary_rep[10]='1';
 	            					}
 	            					else {
 	            						binary_rep[9]='1';
 	            					}
-		        					String object_code =  new String(binary_rep);;//new String(binary_rep);
-		        					int temp_conversion = Integer.parseInt(object_code,2);
-		        					object_code= String.format("%x", temp_conversion);
-		        					System.out.println(object_code);
-		            				objectcode.write(object_code+"\n");
+	            					String object_code = new String(binary_rep);
+	            					int temp_conversion =  Integer.parseInt((object_code),2);
+	            					object_code= String.format("%x", temp_conversion);
+	            					if(computed<0) {
+	            					String computed_hex = String.format("%x", computed);
+	            					computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
+	            					
+	            					objectcode.write(object_code+computed_hex+"\n");
+	            					}
+	            					else {
+		            					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
+		            					
+	            					}
+	        		    			}
+	        		    			else if(isNumeric(line_arr[2])) {
+	        		    				objectcode.write(OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");	
+	        		    			}
+		            			}
+	            				
+				    			else {
+				    				StringBuilder remover = new StringBuilder(line_arr[2]) ;
+	        		    			remover.deleteCharAt(0);
+	        		    			line_arr[2]=remover.toString();
+	        		    			if(!isNumeric(line_arr[2]) ) {
+	        		    			int computed = Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(loccounter.get(htme_counter),16)+3);
+		            				
+	        		    			String temp=OPM.get(line_arr[1])+"0";
+	            					String temp_string = binary_maker(temp);
+	            					char[] binary_rep = temp_string.toCharArray();
+	            					binary_rep[6] = '1' ;
+	            					binary_rep[7] = '1' ;
+	            					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
+	            						binary_rep[10]='1';
+	            					}
+	            					else {
+	            						binary_rep[9]='1';
+	            					}
+	            					String object_code = new String(binary_rep);
+	            					int temp_conversion =  Integer.parseInt((object_code),2);
+	            					object_code= String.format("%x", temp_conversion);
+	            					if(computed<0) {
+	            					String computed_hex = String.format("%x", computed);
+	            					computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
+	            					
+	            					objectcode.write(object_code+computed_hex+"\n");
+	            					}
+	            					else {
+		            					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
+		            					
+	            					}
+	        		    			}
+	        		    			else if(isNumeric(line_arr[2])) {
+	        		    				objectcode.write(OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");	
+	        		    			}
 
 				    			}
 
@@ -873,9 +932,11 @@ public class assembler {
 			char[] binary_rep = temp_string.toCharArray();
 			if(line_arr[1].charAt(0)=='@') {
 			binary_rep[6] = '1' ;
+			binary_rep[7] = '0' ;
 			}
 			else if(line_arr[1].charAt(0)=='#') {
 				binary_rep[7] = '1' ;
+				binary_rep[6] = '0' ;
 				}
 			else {
 				binary_rep[6] = '1' ;
@@ -901,6 +962,7 @@ public class assembler {
     					String temp_string = binary_maker(temp);
     					char[] binary_rep = temp_string.toCharArray();
     					binary_rep[6] = '1' ;
+    					binary_rep[7] = '0' ;
     					binary_rep[11] = '1' ;
     					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
     						binary_rep[10]='1';
@@ -911,6 +973,9 @@ public class assembler {
     					String object_code = new String(binary_rep);
     					int temp_conversion = Integer.parseInt(object_code,2);
     					object_code= String.format("%x", temp_conversion);
+    					if(object_code.length()==7) {
+    						object_code = '0'+object_code;
+    					}
         				objectcode.write(object_code+"\n");
         				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
         				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
@@ -936,11 +1001,14 @@ public class assembler {
         					String temp_string = binary_maker(temp) ;
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[7] = '1' ;
+        					binary_rep[6] = '0' ;
         					binary_rep[11] = '1' ;
         					String object_code = new String(binary_rep);
         					int temp_conversion = Integer.parseInt(object_code,2);
         					object_code= String.format("%x", temp_conversion);
-        					
+        					if(object_code.length()==7) {
+        						object_code = '0'+object_code;
+        					}
             				objectcode.write(object_code+"\n");
             				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
             				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
@@ -957,6 +1025,8 @@ public class assembler {
 			    			line_arr[1]=remover_helper1.toString();
 			    			
 		    				String temp=OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length());
+        					System.out.println(temp);
+
         					//String hex = Integer.toString(temp);
         					//temp = Integer.parseInt(hex,16);
         					String temp_string = binary_maker(temp) ;
@@ -965,13 +1035,16 @@ public class assembler {
         					binary_rep[7] = '1' ;
         					
         					String object_code = new String(binary_rep);
+
         					int temp_conversion = Integer.parseInt(object_code,2);
+
         					object_code= String.format("%x", temp_conversion);
-        					
+        					if(object_code.length()==7) {
+        						object_code = '0'+object_code;
+        					}
             				objectcode.write(object_code+"\n");
             				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
             				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
-            				System.out.println("yeah=========================");
 		    			}
         			}
     				
@@ -1002,6 +1075,7 @@ public class assembler {
     					String temp_string = binary_maker(temp);
     					char[] binary_rep = temp_string.toCharArray();
     					binary_rep[6] = '1' ;
+    					binary_rep[7] = '0' ;
     					binary_rep[11] = '1' ;
     					String object_code = new String(binary_rep);
     					int temp_conversion = Integer.parseInt(object_code,2);
@@ -1035,6 +1109,7 @@ public class assembler {
         					String temp_string = binary_maker(temp) ;
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[7] = '1' ;
+        					binary_rep[6] = '0' ;
         					binary_rep[11] = '1' ;
         					String object_code = new String(binary_rep);
         					int temp_conversion = Integer.parseInt(object_code,2);
@@ -1129,7 +1204,8 @@ public class assembler {
 				String temp_string = binary_maker(temp);
 				char[] binary_rep = temp_string.toCharArray();
 				binary_rep[6] = '1' ;
-				if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
+				binary_rep[7] = '0' ;
+				if (Integer.parseInt(st.get(line_arr[1]),16) - (Integer.parseInt(loccounter.get(htme_counter),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[1]),16) - (Integer.parseInt(loccounter.get(htme_counter),16)+3)>-2048) {
 					binary_rep[10]='1';
 				}
 				else {
@@ -1139,7 +1215,7 @@ public class assembler {
 				loccounter.get(htme_counter);
 				
 				String object_code = new String(binary_rep);
-				int new_address =Integer.parseInt(st.get(line_arr[2]),16) - Integer.parseInt(st.get(st.get("base")),16);
+				int new_address =Integer.parseInt(st.get(line_arr[1]),16) - Integer.parseInt(st.get(st.get("base")),16);
 				if(binary_rep[9]=='1') {
 				object_code = object_code.charAt(0)+object_code.charAt(1)+object_code.charAt(2)+String.format("%x",new_address);
 				}
@@ -1165,7 +1241,8 @@ public class assembler {
 					String temp_string = binary_maker(temp) ;
 					char[] binary_rep = temp_string.toCharArray();
 					binary_rep[7] = '1' ;
-					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
+					binary_rep[6] = '0' ;
+					if (Integer.parseInt(st.get(line_arr[1]),16) - (Integer.parseInt(loccounter.get(htme_counter),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[1]),16) - (Integer.parseInt(loccounter.get(htme_counter),16)+3)>-2048) {
 						binary_rep[10]='1';
 					}
 					else {
@@ -1174,7 +1251,7 @@ public class assembler {
 					}
 					loccounter.get(htme_counter);
 					String object_code = new String(binary_rep);
-					int new_address =Integer.parseInt(st.get(line_arr[2]),16) - Integer.parseInt(st.get(st.get("base")),16);
+					int new_address =Integer.parseInt(st.get(line_arr[1]),16) - Integer.parseInt(st.get(st.get("base")),16);
 					if(binary_rep[9]=='1') {
 					object_code = object_code.charAt(0)+object_code.charAt(1)+object_code.charAt(2)+String.format("%x",new_address);
 					}
@@ -1187,6 +1264,37 @@ public class assembler {
     				objectcode.write(OPM.get(line_arr[0])+sappender6(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");
     			}
 			}
+			else {
+			
+	    			if(!isNumeric(line_arr[1]) ) {
+					String temp=OPM.get(line_arr[0])+sappender4(st.get(line_arr[1]),st.get(line_arr[1]).length());
+					String temp_string = binary_maker(temp);
+					char[] binary_rep = temp_string.toCharArray();
+					binary_rep[6] = '1' ;
+					binary_rep[7] = '1' ;
+					if (Integer.parseInt(st.get(line_arr[1]),16) - (Integer.parseInt(loccounter.get(htme_counter),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[1]),16) - (Integer.parseInt(loccounter.get(htme_counter),16)+3)>-2048) {
+						binary_rep[10]='1';
+					}
+					else {
+						binary_rep[9]='1';
+						
+					}
+					loccounter.get(htme_counter);
+					
+					String object_code = new String(binary_rep);
+					int new_address =Integer.parseInt(st.get(line_arr[1]),16) - Integer.parseInt(st.get(st.get("base")),16);
+					if(binary_rep[9]=='1') {
+					object_code = object_code.charAt(0)+object_code.charAt(1)+object_code.charAt(2)+String.format("%x",new_address);
+					}
+					int temp_conversion = Integer.parseInt(object_code,2);
+					object_code= String.format("%x", temp_conversion);
+					objectcode.write(object_code+"\n");
+	    			}
+	    			else if(isNumeric(line_arr[1])) {
+	    				objectcode.write(OPM.get(line_arr[0])+sappender4(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");	
+	    			}
+				
+				}
 			
 	}
 
@@ -1229,7 +1337,6 @@ public class assembler {
                Map<String,String > ST = new HashMap<>();//symble table
                Map<String,String > OP_1 = new HashMap<>();//hashmap OPcode to simle
                Map<String,String > OP_2 = new HashMap<>();//hashmap OPcode to simle
-               
                OP.put("ADD", "18");
                OP.put("ADDF", "58");
                OP.put("AND", "40");
