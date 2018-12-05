@@ -175,6 +175,9 @@ public class assembler {
     			 type = "start"; 
     			
     		}
+            	else if (arr_token[1].equals("BASE")) {
+       			 type = "basel";
+       		}
                 else if(arr_token[1].equals("EQU")) {
                 	type = "equ";
                 }
@@ -208,6 +211,9 @@ public class assembler {
                  	type ="format4_2";
                  	
                  }
+    				else if (arr_token[0].equals("BASE")) {
+    	       			 type = "base";
+    	       		}
                  else if(OP_2.containsKey(arr_token[0])) {
          			type ="format2";
          		}
@@ -235,7 +241,7 @@ public class assembler {
     	return type; 
    }
 	
-	public static void pass1(String myfile,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String>ltorg) throws IOException {
+	public static void pass1(String myfile,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String>ltorg,List<String> loccounter) throws IOException {
 		File file = new File(myfile);
 		String line = "";
 		String line_type = "";
@@ -356,7 +362,7 @@ public class assembler {
 		    	else if (line_type.equals("format4_2")) {
 		    		 pass1counter.println(String.format("%x", pccounter));
 		    		 pccounter +=0X4;
-		    		 
+		    		 loccounter.add(String.format("%x", pccounter));
 		    		 
 		    	}
 		    	else if (line_type.equals("format1")) {
@@ -529,10 +535,16 @@ public class assembler {
                                 pccounter =pccounter + (Integer.parseInt(line_arr[2])*3);
 		    	
 		    	}
+		    	else if (line_type.equals("base")){
+		    		st.put("base", line_arr[1]);
+		    	}
+		    	else if (line_type.equals("basel")){
+		    		st.put("base", line_arr[2]);
+		    	}
 		    	else if (line_type.equals("instruction")){	
                             pass1counter.println(String.format("%x", pccounter));
                             pccounter +=0X3;
-		    	
+                            loccounter.add(String.format("%x", pccounter));
 		    	}
 		    	
 		    
@@ -546,7 +558,7 @@ public class assembler {
         pass1counter.close();
         littable.close();
 	}
-        public static void pass2(String myfile,Map<String,String>op,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String > OPM,Map<String,String>ltorg) throws FileNotFoundException{
+        public static void pass2(String myfile,Map<String,String>op,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String > OPM,Map<String,String>ltorg,List<String> loccounter) throws FileNotFoundException{
             PrintWriter objectcode;
 			try {
 				objectcode = new PrintWriter("objectcode.txt", "UTF-8");
@@ -556,6 +568,7 @@ public class assembler {
             String line = "";
             String line_type = "";
             int destination = 0; 
+            int htme_counter =0;
             try {
                 while ((line = reader.readLine()) != null) {
                     StringTokenizer token = new StringTokenizer(line);
@@ -837,20 +850,9 @@ public class assembler {
 				binary_rep[7] = '1' ;
 			}
 			binary_rep[8] = '1' ;
-			if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
-				binary_rep[10]='1';
-			}
-			else {
-				binary_rep[9]='1';
-				destination=Integer.parseInt(st.get(line_arr[2]),16)-Integer.parseInt("base",16);
-				
-			}
 			String object_code = new String(binary_rep);
 			int temp_conversion = Integer.parseInt(object_code,2);
 			object_code= String.format("%x", temp_conversion);
-			if(binary_rep[9]=='1') {
-			object_code = object_code.charAt(0)+object_code.charAt(1)+object_code.charAt(2)+String.format("%x", destination);
-			}
 			objectcode.write(object_code+"\n");
 		}
 	    	else if(!isNumeric(line_arr[2]) ) {
@@ -896,12 +898,6 @@ public class assembler {
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[7] = '1' ;
         					binary_rep[11] = '1' ;
-        					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
-        						binary_rep[10]='1';
-        					}
-        					else {
-        						binary_rep[9]='1';
-        					}
         					String object_code = new String(binary_rep);
         					int temp_conversion = Integer.parseInt(object_code,2);
         					object_code= String.format("%x", temp_conversion);
@@ -919,12 +915,7 @@ public class assembler {
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[6] = '1' ;
         					binary_rep[7] = '1' ;
-        					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
-        						binary_rep[10]='1';
-        					}
-        					else {
-        						binary_rep[9]='1';
-        					}
+        					
         					String object_code = new String(binary_rep);
         					int temp_conversion = Integer.parseInt(object_code,2);
         					object_code= String.format("%x", temp_conversion);
@@ -966,6 +957,8 @@ public class assembler {
     					int temp_conversion = Integer.parseInt(object_code,2);
     					object_code= String.format("%x", temp_conversion);
         				objectcode.write(object_code+"\n");
+        				//loccounter.get(i);
+        				//i++;
         				
 		    			}
 		    			else if(isNumeric(line_arr[1])) {
@@ -1075,7 +1068,20 @@ public class assembler {
 				String temp_string = binary_maker(temp);
 				char[] binary_rep = temp_string.toCharArray();
 				binary_rep[6] = '1' ;
+				if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
+					binary_rep[10]='1';
+				}
+				else {
+					binary_rep[9]='1';
+					
+				}
+				loccounter.get(htme_counter);
+				htme_counter++;
 				String object_code = new String(binary_rep);
+				int new_address =Integer.parseInt(st.get(line_arr[2]),16) - Integer.parseInt(st.get(st.get("base")),16);
+				if(binary_rep[9]=='1') {
+				object_code = object_code.charAt(0)+object_code.charAt(1)+object_code.charAt(2)+String.format("%x",new_address);
+				}
 				int temp_conversion = Integer.parseInt(object_code,2);
 				object_code= String.format("%x", temp_conversion);
 				objectcode.write(object_code+"\n");
@@ -1098,7 +1104,20 @@ public class assembler {
 					String temp_string = binary_maker(temp) ;
 					char[] binary_rep = temp_string.toCharArray();
 					binary_rep[7] = '1' ;
+					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
+						binary_rep[10]='1';
+					}
+					else {
+						binary_rep[9]='1';
+						
+					}
+					loccounter.get(htme_counter);
+					htme_counter++;
 					String object_code = new String(binary_rep);
+					int new_address =Integer.parseInt(st.get(line_arr[2]),16) - Integer.parseInt(st.get(st.get("base")),16);
+					if(binary_rep[9]=='1') {
+					object_code = object_code.charAt(0)+object_code.charAt(1)+object_code.charAt(2)+String.format("%x",new_address);
+					}
 					int temp_conversion = Integer.parseInt(object_code,2);
 					object_code= String.format("%x", temp_conversion);
 					
@@ -1137,6 +1156,7 @@ public class assembler {
                myfile = myfile.trim();
                myfile= myfile + ".txt";
                List<String> temp_lit = new ArrayList<String>();
+               List<String> loccounter = new ArrayList<String>();
                Map<String,String > LTORG = new HashMap<>();//hashmap OPcode to simle
                Map<String,String > OP = new HashMap<>();//hashmap OPcode to simle
                Map<String,String > ST = new HashMap<>();//symble table
@@ -1282,12 +1302,12 @@ public class assembler {
                OPM.put("S", "4");
                OPM.put("T", "5");
                OPM.put("F", "6");
-               pass1(myfile,ST,OP_1,OP_2,temp_lit,LTORG);
-               pass2(myfile,OP,ST,OP_1,OP_2,temp_lit,OPM,LTORG);
+               pass1(myfile,ST,OP_1,OP_2,temp_lit,LTORG,loccounter);
+               pass2(myfile,OP,ST,OP_1,OP_2,temp_lit,OPM,LTORG,loccounter);
                System.out.println("fin");
 
 	}
 
 }
 //to_do kml el address lema yb2a base 
-//to_do kml el base fel format 4 we format 3 men 8yr label 
+//to_do kml el base fe format 3 men 8yr label 
