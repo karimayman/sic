@@ -887,7 +887,7 @@ public class assembler {
 			object_code= String.format("%x", temp_conversion);
 			objectcode.write(object_code+"\n");
 			int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
-			mrecord.add("M"+String.format("%x", m)+"05");
+			mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
 		}
 	    	else if(!isNumeric(line_arr[2]) ) {
     				if(line_arr[2].charAt(0)=='@') {
@@ -913,16 +913,17 @@ public class assembler {
     					object_code= String.format("%x", temp_conversion);
         				objectcode.write(object_code+"\n");
         				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
-        				mrecord.add("M"+String.format("%x", m)+"05");
+        				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
 		    			}
-		    			else if(isNumeric(line_arr[2])) {
+    				
+		    			else /*if(isNumeric(line_arr[2]))*/ {
 		    				objectcode.write(OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");	
 		    			}
     				}
         			else if( line_arr[2].charAt(0)=='=') {
         				objectcode.write(OPM.get(line_arr[1])+sappender6(ltorg.get(line_arr[2]),ltorg.get(line_arr[2]).length())+"\n");
         				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
-        				mrecord.add("M"+String.format("%x", m)+"05");
+        				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
         			}
         			else if(line_arr[2].charAt(0)=='#') {
     					StringBuilder remover = new StringBuilder(line_arr[2]) ;
@@ -942,12 +943,19 @@ public class assembler {
         					
             				objectcode.write(object_code+"\n");
             				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
-            				mrecord.add("M"+String.format("%x", m)+"05");
+            				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
+
 		    			}
-		    			else if(isNumeric(line_arr[2])) {
+		    			else  {
+		    				
 		    				objectcode.write(OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");
 		    			}
+        			}
 		    			else {
+		    				StringBuilder remover_helper1 = new StringBuilder(line_arr[1]) ;
+			    			remover_helper1.deleteCharAt(0);
+			    			line_arr[1]=remover_helper1.toString();
+			    			
 		    				String temp=OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length());
         					//String hex = Integer.toString(temp);
         					//temp = Integer.parseInt(hex,16);
@@ -962,15 +970,15 @@ public class assembler {
         					
             				objectcode.write(object_code+"\n");
             				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
-            				mrecord.add("M"+String.format("%x", m)+"05");
-
+            				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
+            				System.out.println("yeah=========================");
 		    			}
         			}
     				
 			}
 		// dee taba3 el else el m3 el x flag , uncomment lema tzbt el x flag hena}
 		
-	 }
+	 
 	else if (line_type.equals("format4_2")){
  		/*if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X'&&line_arr[2].charAt(line_arr[2].length()-2 )== ',' ) {
 			int indexed = Integer.parseInt(st.get(line_arr[1]),16)+ 32768;
@@ -1002,18 +1010,18 @@ public class assembler {
         				//loccounter.get(i);
         				//i++;
         				int m  = Integer.parseInt(loccounter.get(htme_counter),16)+1;
-        				htme_counter++;
-        				mrecord.add("M"+String.format("%x", m)+"05");
+        				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
+
 		    			}
 		    			else if(isNumeric(line_arr[1])) {
 		    				objectcode.write(OPM.get(line_arr[0])+sappender6(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");	
-		    				htme_counter++;
+		    			
 		    			}
     				}
         			else if( line_arr[1].charAt(0)=='=') {
         				objectcode.write(OPM.get(line_arr[0])+sappender6(ltorg.get(line_arr[1]),ltorg.get(line_arr[1]).length())+"\n");
         				int m  = Integer.parseInt(loccounter.get(htme_counter),16)+1;
-        				htme_counter++;
+        			
         				mrecord.add("M"+String.format("%x", m)+"05");
         			}
         			else if(line_arr[1].charAt(0)=='#') {
@@ -1034,8 +1042,8 @@ public class assembler {
         					
             				objectcode.write(object_code+"\n");
             				int m  = Integer.parseInt(loccounter.get(htme_counter),16)+1;
-            				htme_counter++;
-            				mrecord.add("M"+String.format("%x", m)+"05");
+            				
+            				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
 		    			}
 		    			else if(isNumeric(line_arr[1])) {
 		    				objectcode.write(OPM.get(line_arr[0])+sappender6(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");
@@ -1054,14 +1062,14 @@ public class assembler {
         					
             				objectcode.write(object_code+"\n");
             				int m  = Integer.parseInt(loccounter.get(htme_counter),16)+1;
-            				htme_counter++;
-            				mrecord.add("M"+String.format("%x", m)+"05");
+            				
+            				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
 		    			}
         			}
     				
 			}
 		// dee taba3 el else el m3 el x flag , uncomment lema tzbt el x flag hena}
-		
+			htme_counter++;
 	 }
 	else if (line_type.equals("format2")){
 		//objectcode.write("\n");
@@ -1129,7 +1137,7 @@ public class assembler {
 					
 				}
 				loccounter.get(htme_counter);
-				htme_counter++;
+				
 				String object_code = new String(binary_rep);
 				int new_address =Integer.parseInt(st.get(line_arr[2]),16) - Integer.parseInt(st.get(st.get("base")),16);
 				if(binary_rep[9]=='1') {
@@ -1165,7 +1173,6 @@ public class assembler {
 						
 					}
 					loccounter.get(htme_counter);
-					htme_counter++;
 					String object_code = new String(binary_rep);
 					int new_address =Integer.parseInt(st.get(line_arr[2]),16) - Integer.parseInt(st.get(st.get("base")),16);
 					if(binary_rep[9]=='1') {
@@ -1184,9 +1191,14 @@ public class assembler {
 	}
 
 		//}
+		htme_counter++;
 	}
 
 
+                }
+                for(int z = 0; z<=mrecord.size()-1;z++ ) {
+                	HTME.write(mrecord.get(z)+"\n");
+                
                 }
                 HTME.write("E"+sappender6(st.get("progstart"),st.get("progstart").length())+"\n");
             } catch (IOException ex) {
@@ -1195,6 +1207,7 @@ public class assembler {
             
             
             objectcode.close();
+            
             HTME.close();
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
