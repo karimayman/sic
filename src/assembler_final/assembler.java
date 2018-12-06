@@ -647,7 +647,9 @@ public class assembler {
 		    			remover.deleteCharAt(line_arr[2].length()-1);
 		    			remover.deleteCharAt(line_arr[2].length()-2);
 		    			line_arr[2]=remover.toString();
-             			String temp=OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
+		    			int computed = Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3);
+		    			//String temp=OPM.get(line_arr[1])+"0";//sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
+             			String temp=OPM.get(line_arr[1])+"0";//sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
     					String temp_string = binary_maker(temp);
     					char[] binary_rep = temp_string.toCharArray();
     					if(line_arr[1].charAt(0)=='@') {
@@ -670,9 +672,24 @@ public class assembler {
     						binary_rep[9]='1';
     					}
     					String object_code = new String(binary_rep);
-    					int temp_conversion = Integer.parseInt(object_code,2);
+    					int temp_conversion =  Integer.parseInt((object_code),2);
     					object_code= String.format("%x", temp_conversion);
-        				objectcode.write(object_code+"\n");
+    					if(computed<0) {
+    					String computed_hex = String.format("%x", computed);
+    					computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
+    					if(object_code.length()<3) {
+    						object_code = "0"+object_code; 
+    					}
+    					objectcode.write(object_code+computed_hex+"\n");
+    					}
+    					else {
+    						if(object_code.length()<3) {
+        						object_code = "0"+object_code; 
+        					}
+        					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
+        					
+    					}
+		    		
              		}
             		else {
             			if(!isNumeric(line_arr[2]) ) {
@@ -700,10 +717,15 @@ public class assembler {
 	            					if(computed<0) {
 	            					String computed_hex = String.format("%x", computed);
 	            					computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
-	            					
+	            					if(object_code.length()<3) {
+	            						object_code = "0"+object_code; 
+	            					}
 	            					objectcode.write(object_code+computed_hex+"\n");
 	            					}
 	            					else {
+	            						if(object_code.length()<3) {
+	                						object_code = "0"+object_code; 
+	                					}
 		            					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
 		            					
 	            					}
@@ -739,10 +761,15 @@ public class assembler {
 	            					if(computed<0) {
 	            					String computed_hex = String.format("%x", computed);
 	            					computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
-	            					
+	            					if(object_code.length()<3) {
+	            						object_code = "0"+object_code; 
+	            					}
 	            					objectcode.write(object_code+computed_hex+"\n");
 	            					}
 	            					else {
+	            						if(object_code.length()<3) {
+	                						object_code = "0"+object_code; 
+	                					}
 		            					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
 		            					
 	            					}
@@ -775,10 +802,15 @@ public class assembler {
 	            					if(computed<0) {
 	            					String computed_hex = String.format("%x", computed);
 	            					computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
-	            					
+	            					if(object_code.length()<3) {
+	            						object_code = "0"+object_code; 
+	            					}
 	            					objectcode.write(object_code+computed_hex+"\n");
 	            					}
 	            					else {
+	            						if(object_code.length()<3) {
+	                						object_code = "0"+object_code; 
+	                					}
 		            					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
 		            					
 	            					}
@@ -913,12 +945,35 @@ public class assembler {
 		
 	}
 	else if (line_type.equals("format4")){
- 		/*if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X'&&line_arr[2].charAt(line_arr[2].length()-2 )== ',' ) {
-			int indexed = Integer.parseInt(st.get(line_arr[1]),16)+ 32768;
-			String instruction_helper = String.format("%x", indexed);
-			objectcode.write(OPM.get(line_arr[0])+sappender4(instruction_helper,instruction_helper.length())+"\n");
+ 		if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X'&&line_arr[2].charAt(line_arr[2].length()-2 )== ',' ) {
+ 			StringBuilder remover = new StringBuilder(line_arr[2]) ;
+			remover.deleteCharAt(line_arr[2].length()-1);
+			remover.deleteCharAt(line_arr[2].length()-2);
+			line_arr[2]=remover.toString();
+			//String temp=OPM.get(line_arr[1])+"0";//sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
+ 			String temp=OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length());
+			String temp_string = binary_maker(temp);
+			char[] binary_rep = temp_string.toCharArray();
+			if(line_arr[1].charAt(0)=='@') {
+			binary_rep[6] = '1' ;
+			binary_rep[7] = '0' ;
+			}
+			else if(line_arr[1].charAt(0)=='#') {
+				binary_rep[7] = '1' ;
+				binary_rep[6] = '0' ;
+				}
+			else {
+				binary_rep[6] = '1' ;
+				binary_rep[7] = '1' ;
+			}
+			binary_rep[8] = '1' ;
+
+			String object_code = new String(binary_rep);
+			int temp_conversion = Integer.parseInt(object_code,2);
+			object_code= String.format("%x", temp_conversion);
+			objectcode.write(object_code+"\n");
 	}
-		else {*/if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X'&&line_arr[2].charAt(line_arr[2].length()-2 )== ',' ) {
+		else {if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X'&&line_arr[2].charAt(line_arr[2].length()-2 )== ',' ) {
 			//int indexed = Integer.parseInt(st.get(line_arr[1]),16)+ 32768;
 			//String instruction_helper = String.format("%x", indexed);
 			//objectcode.write(OPM.get(line_arr[0])+sappender4(instruction_helper,instruction_helper.length())+"\n");
@@ -1048,7 +1103,7 @@ public class assembler {
         			}
     				
 			}
-		// dee taba3 el else el m3 el x flag , uncomment lema tzbt el x flag hena}
+		}
 		
 	 
 	else if (line_type.equals("format4_2")){
@@ -1284,10 +1339,11 @@ public class assembler {
 				String object_code = new String(binary_rep);
 				int temp_conversion =  Integer.parseInt((object_code),2);
 				object_code= String.format("%x", temp_conversion);
+				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				if(object_code.length()<3) {
 					object_code = "0"+object_code;
 				}
-				System.out.println(object_code);
+				
 				if(computed<0) {
 				String computed_hex = String.format("%x", computed);
 				computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
