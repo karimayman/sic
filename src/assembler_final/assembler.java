@@ -1284,6 +1284,10 @@ public class assembler {
 				String object_code = new String(binary_rep);
 				int temp_conversion =  Integer.parseInt((object_code),2);
 				object_code= String.format("%x", temp_conversion);
+				if(object_code.length()<3) {
+					object_code = "0"+object_code;
+				}
+				System.out.println(object_code);
 				if(computed<0) {
 				String computed_hex = String.format("%x", computed);
 				computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
@@ -1488,5 +1492,4 @@ public class assembler {
 	}
 
 }
-//to_do kml el address lema yb2a base 
-//to_do kml el base fe format 3 men 8yr label 
+//to_do el ,x we 5las 
