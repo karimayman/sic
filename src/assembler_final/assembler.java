@@ -618,6 +618,18 @@ public class assembler {
         public static void pass2(String myfile,Map<String,String>op,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String > OPM,Map<String,String>ltorg,List<String> loccounter) throws FileNotFoundException{
             PrintWriter objectcode;
 			try {
+				int htme_counter_flag =0; 
+				String tflag="";
+				int count_flag = 0;
+				int proglength = 0;
+				String theader = "";
+				int tbegin=0 ;
+				String tstring="" ; 
+				String tstring_temp="";
+				String trecord="";
+			    BufferedReader tbringer = new BufferedReader(new FileReader("objectcode.txt"));
+			    String tline ="";  
+			    
 				objectcode = new PrintWriter("objectcode.txt", "UTF-8");
 				PrintWriter HTME = new PrintWriter("HTME.txt", "UTF-8");
 				HTME.write("H"+name_appender(st.get("progname"),st.get("progname").length())+sappender6(st.get("progstart"),st.get("progstart").length())+sappender6(st.get("proglength"),st.get("proglength").length())+"\n");
@@ -681,13 +693,14 @@ public class assembler {
     						object_code = "0"+object_code; 
     					}
     					objectcode.write(object_code+computed_hex+"\n");
+    					trecord = object_code+computed_hex;
     					}
     					else {
     						if(object_code.length()<3) {
         						object_code = "0"+object_code; 
         					}
         					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
-        					
+        					trecord=object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length());
     					}
 		    		
              		}
@@ -720,21 +733,24 @@ public class assembler {
 	            						object_code = "0"+object_code; 
 	            					}
 	            					objectcode.write(object_code+computed_hex+"\n");
+	            					trecord=object_code+computed_hex;
 	            					}
 	            					else {
 	            						if(object_code.length()<3) {
 	                						object_code = "0"+object_code; 
 	                					}
 		            					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
-		            					
+		            					trecord= object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length());
 	            					}
 	        		    			}
 	        		    			else if(isNumeric(line_arr[2])) {
 	        		    				objectcode.write(OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");	
+	        		    				trecord=OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length());
 	        		    			}
 	            				}
 		            			else if( line_arr[2].charAt(0)=='=') {
 		            				objectcode.write(OPM.get(line_arr[1])+sappender4(ltorg.get(line_arr[2]),ltorg.get(line_arr[2]).length())+"\n");
+		            				trecord= OPM.get(line_arr[1])+sappender4(ltorg.get(line_arr[2]),ltorg.get(line_arr[2]).length());
 		            			}
 		            			else if(line_arr[2].charAt(0)=='#') {
 		            				StringBuilder remover = new StringBuilder(line_arr[2]) ;
@@ -764,17 +780,19 @@ public class assembler {
 	            						object_code = "0"+object_code; 
 	            					}
 	            					objectcode.write(object_code+computed_hex+"\n");
+	            					trecord= object_code+computed_hex;
 	            					}
 	            					else {
 	            						if(object_code.length()<3) {
 	                						object_code = "0"+object_code; 
 	                					}
 		            					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
-		            					
+		            					trecord = object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length());
 	            					}
 	        		    			}
 	        		    			else if(isNumeric(line_arr[2])) {
 	        		    				objectcode.write(OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");	
+	        		    				trecord=OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length());
 	        		    			}
 		            			}
 	            				
@@ -805,17 +823,19 @@ public class assembler {
 	            						object_code = "0"+object_code; 
 	            					}
 	            					objectcode.write(object_code+computed_hex+"\n");
+	            					trecord=object_code+computed_hex;
 	            					}
 	            					else {
 	            						if(object_code.length()<3) {
 	                						object_code = "0"+object_code; 
 	                					}
 		            					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
-		            					
+		            					trecord=object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length());
 	            					}
 	        		    			}
 	        		    			else if(isNumeric(line_arr[2])) {
 	        		    				objectcode.write(OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");	
+	        		    				trecord=OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length());
 	        		    			}
 
 				    			}
@@ -853,6 +873,7 @@ public class assembler {
 		
 		}*/
 		objectcode.write(sappender6(line_arr[2],line_arr[2].length())+"\n");
+		trecord=sappender6(line_arr[2],line_arr[2].length());
          }
 	else if (line_type.equals("byte")){
         		if(checker.equals("X")) {
@@ -862,6 +883,7 @@ public class assembler {
 			remover.deleteCharAt(line_arr[2].length()-3);
 			line_arr[2]=(remover.toString());
 			objectcode.write(line_arr[2]+"\n");
+			trecord=line_arr[2];
 			
         }
         		
@@ -915,6 +937,7 @@ public class assembler {
 		    	String ascii3_s=String.format("%x", ascii3);
 		    	ascii=ascii1_s+ascii2_s+ascii3_s;
 		    	   objectcode.write( ascii+"\n");
+		    	   trecord=ascii;
 		    }
 		    else if(iterations-i>=2) {
 		    	int ascii1 = (bytes[i]);
@@ -923,12 +946,14 @@ public class assembler {
 		    	String ascii2_s=String.format("%x", ascii2);
 		    	ascii=ascii1_s+ascii2_s;
 		    	   objectcode.write( ascii+"\n");
+		    	   trecord=ascii;
 		    }
 		    else if(iterations-i==1) {
 		    	 int ascii1 = (bytes[i]);
 		    	 String ascii1_s=String.format("%x", ascii1);
 		    	 ascii = ascii1_s;
 		    objectcode.write( ascii+"\n");
+		    trecord=ascii;
 		    }
 				}
 		
@@ -940,6 +965,7 @@ public class assembler {
 			//remover.deleteCharAt(line_arr[2].length()-3);
 			//line_arr[2]=remover.toString();
 			objectcode.write(sappender6(String.format("%x",line_arr[2]),String.format("%x",line_arr[2]).length())+"\n");
+			trecord=sappender6(String.format("%x",line_arr[2]),String.format("%x",line_arr[2]).length());
                     }
 		
 	}
@@ -971,6 +997,7 @@ public class assembler {
 			int temp_conversion = Integer.parseInt(object_code,2);
 			object_code= String.format("%x", temp_conversion);
 			objectcode.write(object_code+"\n");
+			trecord=object_code;
 	}
 		else {if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X'&&line_arr[2].charAt(line_arr[2].length()-2 )== ',' ) {
 			//int indexed = Integer.parseInt(st.get(line_arr[1]),16)+ 32768;
@@ -1000,6 +1027,7 @@ public class assembler {
 			int temp_conversion = Integer.parseInt(object_code,2);
 			object_code= String.format("%x", temp_conversion);
 			objectcode.write(object_code+"\n");
+			trecord=object_code;
 			int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
 			mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
 		}
@@ -1030,16 +1058,19 @@ public class assembler {
     						object_code = '0'+object_code;
     					}
         				objectcode.write(object_code+"\n");
+        				trecord=object_code;
         				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
         				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
 		    			}
     				
 		    			else /*if(isNumeric(line_arr[2]))*/ {
 		    				objectcode.write(OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");	
+		    				trecord=OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length());
 		    			}
     				}
         			else if( line_arr[2].charAt(0)=='=') {
         				objectcode.write(OPM.get(line_arr[1])+sappender6(ltorg.get(line_arr[2]),ltorg.get(line_arr[2]).length())+"\n");
+        				trecord = OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length());
         				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
         				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
         			}
@@ -1063,6 +1094,7 @@ public class assembler {
         						object_code = '0'+object_code;
         					}
             				objectcode.write(object_code+"\n");
+            				trecord=object_code;
             				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
             				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
 
@@ -1070,6 +1102,7 @@ public class assembler {
 		    			else  {
 		    				
 		    				objectcode.write(OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");
+		    				trecord=OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length());
 		    			}
         			}
 		    			else {
@@ -1096,6 +1129,7 @@ public class assembler {
         						object_code = '0'+object_code;
         					}
             				objectcode.write(object_code+"\n");
+            				trecord=object_code;
             				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
             				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
 		    			}
@@ -1134,6 +1168,7 @@ public class assembler {
     					int temp_conversion = Integer.parseInt(object_code,2);
     					object_code= String.format("%x", temp_conversion);
         				objectcode.write(object_code+"\n");
+        				trecord= object_code;
         				//loccounter.get(i);
         				//i++;
         				int m  = Integer.parseInt(loccounter.get(htme_counter),16)+1;
@@ -1142,11 +1177,12 @@ public class assembler {
 		    			}
 		    			else if(isNumeric(line_arr[1])) {
 		    				objectcode.write(OPM.get(line_arr[0])+sappender6(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");	
-		    			
+		    			trecord=OPM.get(line_arr[0])+sappender6(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length());
 		    			}
     				}
         			else if( line_arr[1].charAt(0)=='=') {
         				objectcode.write(OPM.get(line_arr[0])+sappender6(ltorg.get(line_arr[1]),ltorg.get(line_arr[1]).length())+"\n");
+        				trecord=OPM.get(line_arr[0])+sappender6(ltorg.get(line_arr[1]),ltorg.get(line_arr[1]).length());
         				int m  = Integer.parseInt(loccounter.get(htme_counter),16)+1;
         			
         				mrecord.add("M"+String.format("%x", m)+"05");
@@ -1169,12 +1205,14 @@ public class assembler {
         					object_code= String.format("%x", temp_conversion);
         					
             				objectcode.write(object_code+"\n");
+            				trecord=object_code;
             				int m  = Integer.parseInt(loccounter.get(htme_counter),16)+1;
             				
             				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
 		    			}
 		    			else if(isNumeric(line_arr[1])) {
 		    				objectcode.write(OPM.get(line_arr[0])+sappender6(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");
+		    				trecord=OPM.get(line_arr[0])+sappender6(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length());
 		    			}
 		    			else {
 		    				String temp=OPM.get(line_arr[0])+sappender6(st.get(line_arr[1]),st.get(line_arr[1]).length());
@@ -1189,6 +1227,7 @@ public class assembler {
         					object_code= String.format("%x", temp_conversion);
         					
             				objectcode.write(object_code+"\n");
+            				trecord=object_code;
             				int m  = Integer.parseInt(loccounter.get(htme_counter),16)+1;
             				
             				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
@@ -1197,25 +1236,29 @@ public class assembler {
     				
 			}
 		// dee taba3 el else el m3 el x flag , uncomment lema tzbt el x flag hena}
-			htme_counter++;
-	 }
+			htme_counter_flag=1;
+			}
 	else if (line_type.equals("format2")){
 		//objectcode.write("\n");
 		   if(token.countTokens()>2) {
 			   objectcode.write(OPM.get(line_arr[0])+OPM.get(line_arr[1])+OPM.get(line_arr[2])+"\n");
+			   trecord=OPM.get(line_arr[0])+OPM.get(line_arr[1])+OPM.get(line_arr[2]);
 		   }
 		   else {
 			   objectcode.write(OPM.get(line_arr[0])+OPM.get(line_arr[1])+"0"+"\n");
+			   trecord=OPM.get(line_arr[0])+OPM.get(line_arr[1])+"0";
 		   }
 		
 	}
 	else if (line_type.equals("format1")){
 		objectcode.write(OPM.get(line_arr[0])+"\n");
+		trecord=OPM.get(line_arr[0]);
 		   	
 	}
 	else if(line_type.equals("format2_label")) {
 		   //if(token.countTokens()>2) {
 			   objectcode.write(OPM.get(line_arr[1])+OPM.get(line_arr[2])+"0"+"\n");
+			   trecord=OPM.get(line_arr[1])+OPM.get(line_arr[2])+"0";
 		 /*  }
 		   else {
 			   objectcode.write(OPM.get(line_arr[1])+"0"+"0"+"\n");
@@ -1224,14 +1267,16 @@ public class assembler {
 	else if(line_type.equals("format1_label")) {
 		 
 			   objectcode.write(OPM.get(line_arr[1])+"\n");
+			   trecord=OPM.get(line_arr[1]);
 		   
 	}
 	else if (line_type.equals("RESB")){
 		//objectcode.write("\n");
+		tflag="b";
 	}
 	else if (line_type.equals("RESW")){
 		//objectcode.write("\n");       
-	
+		tflag="b";
 	}
 	else if (line_type.equals("instruction")){	
 		/*if(line_arr[1].charAt(line_arr[1].length()-1 )== 'X'&&line_arr[1].charAt(line_arr[1].length()-2 )== ',' ) {
@@ -1284,12 +1329,14 @@ public class assembler {
 			object_code = "0"+object_code; 
 		}
 		objectcode.write(object_code+computed_hex+"\n");
+		trecord=object_code+computed_hex;
 		}
 		else {
 			if(object_code.length()<3) {
 				object_code = "0"+object_code; 
 			}
 			objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
+			trecord=object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length());
 			
 		}
 		}	
@@ -1324,18 +1371,21 @@ public class assembler {
 			computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
 			
 			objectcode.write(object_code+computed_hex+"\n");
+			trecord=object_code+computed_hex;
 			}
 			else {
 				objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
-				
+				trecord=object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length());
 			}
 			}
 			else if(isNumeric(line_arr[1])) {
-				objectcode.write(OPM.get(line_arr[0])+sappender4(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");	
+				objectcode.write(OPM.get(line_arr[0])+sappender4(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");
+				trecord=OPM.get(line_arr[0])+sappender4(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length());
 			}
 			}
 			else if( line_arr[1].charAt(0)=='=') {
 				objectcode.write(OPM.get(line_arr[0])+sappender4(ltorg.get(line_arr[1]),ltorg.get(line_arr[1]).length())+"\n");
+				trecord=OPM.get(line_arr[0])+sappender4(ltorg.get(line_arr[1]),ltorg.get(line_arr[1]).length());
 			}
 			else if(line_arr[1].charAt(0)=='#') {
 
@@ -1363,14 +1413,17 @@ public class assembler {
 				computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
 				
 				objectcode.write(object_code+computed_hex+"\n");
+				trecord=object_code+computed_hex;
 				}
 				else {
 					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
+					trecord=object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length());
 					
 				}
 				}
 				else if(isNumeric(line_arr[1])) {
 					objectcode.write(OPM.get(line_arr[0])+sappender4(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");	
+					trecord=OPM.get(line_arr[0])+sappender4(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length());
 				}
 				}
 			else {
@@ -1401,14 +1454,17 @@ public class assembler {
 				computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
 				
 				objectcode.write(object_code+computed_hex+"\n");
+				trecord=object_code+computed_hex;
 				}
 				else {
 					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
+					trecord=object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length());
 					
 				}
 				}
 				else if(isNumeric(line_arr[1])) {
 					objectcode.write(OPM.get(line_arr[0])+sappender4(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length())+"\n");	
+					trecord=OPM.get(line_arr[0])+sappender4(String.format("%x", line_arr[1]),String.format("%x", line_arr[1]).length());
 				}
 				
 				}
@@ -1416,10 +1472,57 @@ public class assembler {
 	}
 
 		}
-		htme_counter++;
-	}
+		htme_counter_flag=1;
+		}
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+             	if(tflag!="b") {
+             	//	 while ((tline = tbringer.readLine()) != null) { 
+           //  	        trecord = tline;
+             	//       System.out.println(trecord);
+             	//    }
+             		
+		             		if(count_flag==3) {
+		             		}
+		             		else {
+				             	tstring_temp=trecord;
+				             	if(tstring.length()+tstring_temp.length()<61) {
+						             	tstring =tstring+ tstring_temp;
+						             	count_flag=1;
+				             		}
+				             	else {
+					             		if(st.get(line_arr[0])!=null) {
+					             		proglength = Integer.parseInt(st.get(line_arr[0]),16)-tbegin;
+				             		}
+				             		else {
+				             				proglength = Integer.parseInt(loccounter.get(htme_counter),16)-tbegin;
+				             		}
+				             	theader =theader+sappender6(String.format("%x", proglength),String.format("%x", proglength).length());
+				             	//count_flag=0;
+				             	HTME.write(theader+tstring+"\n");
+				             	if(st.get(line_arr[0])!=null) {
+					             	theader ="T"+ st.get(line_arr[0]);             //+sappender6(proglength,proglength.length());
+					             	tbegin = Integer.parseInt(st.get(line_arr[0]),16);
+					             			}
+					             			else {
+					             				theader ="T"+ loccounter.get(htme_counter);       
+					                         	tbegin = Integer.parseInt(loccounter.get(htme_counter),16);
+					             			}
+				             	tstring = trecord;
+				             	}
+		             }
+		             	}
+		             	else {
+		             		HTME.write("\n");
+		             		count_flag = 0;
+		             		 tflag = "A";
+		             	}
+             	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+               
+                if(htme_counter_flag==1) {
+                	htme_counter++;
+                	htme_counter_flag=0;
+                }
                 }
                 for(int z = 0; z<=mrecord.size()-1;z++ ) {
                 	HTME.write(mrecord.get(z)+"\n");
