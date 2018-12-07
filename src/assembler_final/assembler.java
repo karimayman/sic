@@ -450,6 +450,7 @@ public class assembler {
 		    			for (int i=0;i<temp_lit.size();i++) {
 		    				String temp_holder = temp_lit.get(i);
 		    				if(temp_holder.charAt(1)=='X') {
+		    					System.out.println(temp_holder);
 			   		    		StringBuilder remover = new StringBuilder(temp_holder) ;
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(0);
@@ -460,10 +461,12 @@ public class assembler {
 				    			size = Math.ceil(size);
 				    			int inted_size= (int) size;	
 				    			String string_size= Integer.toString(inted_size);
-				    			pccounter=pccounter+(inted_size);
+				    	
+				    		
 				    			littable.println(temp_lit.get(i)+" "+temp_holder+" "+string_size+" "+String.format("%x", pccounter));
 				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
-	                        
+				    			pccounter=pccounter+(inted_size);
+
 		    				}
 		    				else if(temp_holder.charAt(1)=='C') {
 		    		    		StringBuilder remover = new StringBuilder(temp_holder) ;
