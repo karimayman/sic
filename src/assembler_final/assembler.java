@@ -446,8 +446,8 @@ public class assembler {
 		    	}
 		    	else if(line_type.equals("ltorg")||line_type.equals("end")) {
 		    		if(!temp_lit.isEmpty()) {
-		    			pass1counter.println(String.format("%x", pccounter));
 		    			for (int i=0;i<temp_lit.size();i++) {
+			    			pass1counter.println(String.format("%x", pccounter));
 		    				String temp_holder = temp_lit.get(i);
 		    				if(temp_holder.charAt(1)=='X') {
 		    					System.out.println(temp_holder);
@@ -601,8 +601,9 @@ public class assembler {
 		    	}
 		    	else if (line_type.equals("instruction")){	
                             pass1counter.println(String.format("%x", pccounter));
-                            pccounter +=0X3;
                             loccounter.add(String.format("%x", pccounter));
+                            pccounter +=0X3;
+                            
 		    	}
 		    	
 		    
@@ -995,7 +996,7 @@ public class assembler {
 				binary_rep[7] = '1' ;
 			}
 			binary_rep[8] = '1' ;
-
+			binary_rep[11]='1';
 			String object_code = new String(binary_rep);
 			int temp_conversion = Integer.parseInt(object_code,2);
 			object_code= String.format("%x", temp_conversion);
@@ -1026,6 +1027,7 @@ public class assembler {
 				binary_rep[7] = '1' ;
 			}
 			binary_rep[8] = '1' ;
+			binary_rep[11]='1';
 			String object_code = new String(binary_rep);
 			int temp_conversion = Integer.parseInt(object_code,2);
 			object_code= String.format("%x", temp_conversion);
@@ -1054,6 +1056,7 @@ public class assembler {
     					else {
     						binary_rep[9]='1';
     					}
+    					binary_rep[11]='1';
     					String object_code = new String(binary_rep);
     					int temp_conversion = Integer.parseInt(object_code,2);
     					object_code= String.format("%x", temp_conversion);
@@ -1122,11 +1125,9 @@ public class assembler {
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[6] = '1' ;
         					binary_rep[7] = '1' ;
-        					
+        					binary_rep[11]='1';
         					String object_code = new String(binary_rep);
-
         					int temp_conversion = Integer.parseInt(object_code,2);
-
         					object_code= String.format("%x", temp_conversion);
         					if(object_code.length()==7) {
         						object_code = '0'+object_code;
@@ -1225,6 +1226,7 @@ public class assembler {
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[6] = '1' ;
         					binary_rep[7] = '1' ;
+        					binary_rep[11]='1';
         					String object_code = new String(binary_rep);
         					int temp_conversion = Integer.parseInt(object_code,2);
         					object_code= String.format("%x", temp_conversion);
