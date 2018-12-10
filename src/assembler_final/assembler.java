@@ -462,20 +462,22 @@ public class assembler {
 			    			pass1counter.println(String.format("%x", pccounter));
 		    				String temp_holder = temp_lit.get(i);
 		    				if(temp_holder.charAt(1)=='X') {
-		    					System.out.println(temp_holder);
 			   		    		StringBuilder remover = new StringBuilder(temp_holder) ;
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(temp_holder.length()-4);
 				    			temp_holder=(remover.toString());
+
 				    			double size=(double) temp_holder.length()/2;
 				    			size = Math.ceil(size);
 				    			int inted_size= (int) size;	
 				    			String string_size= Integer.toString(inted_size);
 				    	
 				    		
+
 				    			littable.println(temp_lit.get(i)+" "+temp_holder+" "+string_size+" "+String.format("%x", pccounter));
+				    			System.out.println(temp_holder);
 				    			ltorg.put(temp_holder, String.format("%x", pccounter));
 				    			pccounter=pccounter+(inted_size);
 
@@ -489,17 +491,22 @@ public class assembler {
 				    			temp_holder=(remover.toString());
 				    			String value = ascii_maker(temp_holder,temp_holder.length());
 				    			littable.println(temp_lit.get(i)+" "+value+" "+temp_holder.length()+" "+String.format("%x", pccounter));
-				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
+
+				    			ltorg.put(temp_holder, String.format("%x", pccounter));
+				    			System.out.println(ltorg.get(temp_holder));
+
 				    			int inted_size=temp_holder.length();	
 				    			pccounter=pccounter+(inted_size);
 
 		    				}
 		    				else {
 		    					StringBuilder remover = new StringBuilder(temp_holder) ;
-				    			temp_holder = remover.deleteCharAt(0).toString();
-				    		
+				    			remover.deleteCharAt(temp_holder.length()-1);
+				    			remover.deleteCharAt(0);
+				    			temp_holder=remover.toString();
+				    			
 		    					littable.println(temp_lit.get(i)+" "+String.format("%x",temp_holder)+" "+temp_holder.length()+" "+String.format("%x", pccounter));
-		    					ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
+		    					ltorg.put(temp_holder, String.format("%x", pccounter));
 		    					String temp1= String.format("%x", temp_lit.get(i));
 		    					int temp2 = Integer.parseInt(temp1,16);
 		    					pccounter=pccounter+temp2;
@@ -682,23 +689,27 @@ public class assembler {
                      else {
                     	 last ="n";
                      }
-                        if(line_arr[2].charAt(line_arr[2].length()-1 )== '@'||line_arr[2].charAt(line_arr[2].length()-1 )== '#'||line_arr[2].charAt(line_arr[2].length()-1 )== '=') 
-                         {
-                           first = charrem.deleteCharAt(0).toString();
+                        if(line_arr[2].charAt(0)== '@'||line_arr[2].charAt(0)== '#'||line_arr[2].charAt(0)== '=') 
+                         {	
+                            first= line_arr[2].charAt(0)+"";
+                           charrem.deleteCharAt(0);
                            line_arr[2]=charrem.toString();
                         }
                         else {
                         	first = "n";
                         }
+                        System.out.println(first+"uaasd");
                          if (first.charAt(0) == '='){
-                           charrem.deleteCharAt(0);
-                           charrem.deleteCharAt(line_arr[2].length()-1);
-                           line_arr[2]=charrem.toString();
                            if(line_arr[2].charAt(0)=='C'||line_arr[2].charAt(0)=='X') {
-                        	   charrem.deleteCharAt(line_arr[2].length()-1);
-                               line_arr[2]=charrem.toString();   
+                               charrem.deleteCharAt(0);
                            }
+                           charrem.deleteCharAt(0);
+                      	   charrem.deleteCharAt(line_arr[2].length()-3);
+
+                           line_arr[2]=charrem.toString();
+                           
                            storlit=ltorg.get(line_arr[2]);
+                           System.out.println(storlit);
                          }
                          else {
 
@@ -720,7 +731,8 @@ public class assembler {
                          else if (first.charAt(0) == '#'){
                            binaryrep[6]='0';
                          }
-                       if (!isNumeric(line_arr[2])){
+                       if (!isNumeric(line_arr[2])||first.charAt(0)=='='){
+                    	   System.out.println(line_arr[2]);
                         int computed = Integer.parseInt(storlit,16) - (Integer.parseInt(st.get(line_arr[0]),16)+3);
 
                          if(computed<2048 && computed>-2048 ){
@@ -733,6 +745,7 @@ public class assembler {
                          }
                        }
                        else if (isNumeric(line_arr[2])){
+                    	   System.out.println(line_arr[0]+"  "+line_arr[2]);
                          destination = sappender6(String.format("%x",line_arr[2]),String.format("x",line_arr[2]).length());
                        }
                           temp_string = new String(binaryrep);
