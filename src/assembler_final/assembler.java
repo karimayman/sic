@@ -751,7 +751,7 @@ public class assembler {
                           temp_string = new String(binaryrep);
                           oc = binary_reverse(temp_string);
                           String fullcode = oc+destination;
-                          objectcode.write(fullcode);
+                          objectcode.write(fullcode+"\n");
                           trecord = fullcode;
                       
                     }
