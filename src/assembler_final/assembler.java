@@ -464,7 +464,7 @@ public class assembler {
 				    	
 				    		
 				    			littable.println(temp_lit.get(i)+" "+temp_holder+" "+string_size+" "+String.format("%x", pccounter));
-				    			ltorg.put(temp_lit.get(i), String.format("%x", pccounter));
+				    			ltorg.put(temp_holder, String.format("%x", pccounter));
 				    			pccounter=pccounter+(inted_size);
 
 		    				}
@@ -1115,18 +1115,22 @@ public class assembler {
 		    				StringBuilder remover_helper1 = new StringBuilder(line_arr[1]) ;
 			    			remover_helper1.deleteCharAt(0);
 			    			line_arr[1]=remover_helper1.toString();
-			    			
+	    					System.out.println(line_arr[1]);
+
 		    				String temp=OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length());
         					System.out.println(temp);
 
         					//String hex = Integer.toString(temp);
         					//temp = Integer.parseInt(hex,16);
         					String temp_string = binary_maker(temp) ;
+        					System.out.println(temp_string);
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[6] = '1' ;
         					binary_rep[7] = '1' ;
         					binary_rep[11]='1';
         					String object_code = new String(binary_rep);
+        					System.out.println(object_code);
+
         					int temp_conversion = Integer.parseInt(object_code,2);
         					object_code= String.format("%x", temp_conversion);
         					if(object_code.length()==7) {
@@ -1222,7 +1226,9 @@ public class assembler {
 		    				String temp=OPM.get(line_arr[0])+sappender6(st.get(line_arr[1]),st.get(line_arr[1]).length());
         					//String hex = Integer.toString(temp);
         					//temp = Integer.parseInt(hex,16);
-        					String temp_string = binary_maker(temp) ;
+		    				System.out.println(line_arr[0]);
+		    				System.out.println(OPM.get(line_arr[0]));
+		    				String temp_string = binary_maker(temp) ;
         					char[] binary_rep = temp_string.toCharArray();
         					binary_rep[6] = '1' ;
         					binary_rep[7] = '1' ;
@@ -1230,11 +1236,9 @@ public class assembler {
         					String object_code = new String(binary_rep);
         					int temp_conversion = Integer.parseInt(object_code,2);
         					object_code= String.format("%x", temp_conversion);
-        					
             				objectcode.write(object_code+"\n");
             				trecord=object_code;
             				int m  = Integer.parseInt(loccounter.get(htme_counter),16)+1;
-            				
             				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
 		    			}
         			}
