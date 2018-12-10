@@ -29,6 +29,18 @@ public class assembler {
 		for(int i =0 ; i<)
 		return Hex;
 	}*/
+	 public static String binary_reverse(String binary){
+         char binchar[] = binary.toCharArray() ;
+         String fbin = binary.substring(0,4);
+         String sbin = binary.substring(4,8);
+         String tbin = binary.substring(8,12);
+         int ff=Integer.parseInt(fbin,2);
+         int sf=Integer.parseInt(sbin,2);
+         int tf=Integer.parseInt(tbin,2);
+         String combiner = String.format("%x",ff)+String.format("%x",sf)+String.format("%x",tf);
+
+         return combiner;
+       }
 	public static String binary_maker(String hex)
 	{
 	    String s = "";
@@ -641,8 +653,12 @@ public class assembler {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = "";
             String line_type = "";
-            int destination = 0; 
+            int intdestination = 0; 
             int htme_counter =0;
+            String last="";
+            String first="";        
+            String destination ="";
+            String storlit="";
             List<String> mrecord = new ArrayList<String>();;
             try {
                 while ((line = reader.readLine()) != null) {
@@ -654,203 +670,77 @@ public class assembler {
                 String checker="";
                 if(token.countTokens()>2)
                     checker = Character.toString(line_arr[2].charAt(0));
-             	if (line_type.equals("label")){
-             		if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X'&&line_arr[2].charAt(line_arr[2].length()-2 )== ',' ) {
-            			//int indexed = Integer.parseInt(st.get(line_arr[1]),16)+ 32768;
-            			//String instruction_helper = String.format("%x", indexed);
-            			//objectcode.write(OPM.get(line_arr[0])+sappender4(instruction_helper,instruction_helper.length())+"\n");
-             			StringBuilder remover = new StringBuilder(line_arr[2]) ;
-		    			remover.deleteCharAt(line_arr[2].length()-1);
-		    			remover.deleteCharAt(line_arr[2].length()-2);
-		    			line_arr[2]=remover.toString();
-		    			int computed = Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3);
-		    			//String temp=OPM.get(line_arr[1])+"0";//sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
-             			String temp=OPM.get(line_arr[1])+"0";//sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
-    					String temp_string = binary_maker(temp);
-    					char[] binary_rep = temp_string.toCharArray();
-    					if(line_arr[2].charAt(0)=='@') {
-    					binary_rep[6] = '1' ;
-    					binary_rep[7] = '0' ;
-    					}
-    					else if(line_arr[2].charAt(0)=='#') {
-        					binary_rep[7] = '1' ;
-        					binary_rep[6] = '0' ;
-        					}
-    					else {
-    						binary_rep[6] = '1' ;
-    						binary_rep[7] = '1' ;
-    					}
-    					binary_rep[8] = '1' ;
-    					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
-    						binary_rep[10]='1';
-    					}
-    					else {
-    						binary_rep[9]='1';
-    					}
-    					String object_code = new String(binary_rep);
-    					int temp_conversion =  Integer.parseInt((object_code),2);
-    					object_code= String.format("%x", temp_conversion);
-    					if(computed<0) {
-    					String computed_hex = String.format("%x", computed);
-    					computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
-    					if(object_code.length()<3) {
-    						object_code = "0"+object_code; 
-    					}
-    					objectcode.write(object_code+computed_hex+"\n");
-    					trecord = object_code+computed_hex;
-    					}
-    					else {
-    						if(object_code.length()<3) {
-        						object_code = "0"+object_code; 
-        					}
-        					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
-        					trecord=object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length());
-    					}
-		    		
-             		}
-            		else {
-            			if(!isNumeric(line_arr[2]) ) {
-	            				if(line_arr[2].charAt(0)=='@') {
-	            					StringBuilder remover = new StringBuilder(line_arr[2]) ;
-	        		    			remover.deleteCharAt(0);
-	        		    			line_arr[2]=remover.toString();
-	        		    			if(!isNumeric(line_arr[2]) ) {
-	        		    			int computed = Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3);		            				
-	        		    			String temp=OPM.get(line_arr[1])+"0";
-	            					String temp_string = binary_maker(temp);
-	            					char[] binary_rep = temp_string.toCharArray();
-	            					binary_rep[6] = '1' ;
-	            					binary_rep[7] = '0' ;
-	            					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
-	            						binary_rep[10]='1';
-	            					}
-	            					else {
-	            						binary_rep[9]='1';
-	            					}
-	            					String object_code = new String(binary_rep);
-	            					int temp_conversion =  Integer.parseInt((object_code),2);
-	            					object_code= String.format("%x", temp_conversion);
-	            					if(computed<0) {
-	            					String computed_hex = String.format("%x", computed);
-	            					computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
-	            					if(object_code.length()<3) {
-	            						object_code = "0"+object_code; 
-	            					}
-	            					objectcode.write(object_code+computed_hex+"\n");
-	            					trecord=object_code+computed_hex;
-	            					}
-	            					else {
-	            						if(object_code.length()<3) {
-	                						object_code = "0"+object_code; 
-	                					}
-		            					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
-		            					trecord= object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length());
-	            					}
-	        		    			}
-	        		    			else if(isNumeric(line_arr[2])) {
-	        		    				objectcode.write(OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");	
-	        		    				trecord=OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length());
-	        		    			}
-	            				}
-		            			else if( line_arr[2].charAt(0)=='=') {
-		            				objectcode.write(OPM.get(line_arr[1])+sappender4(ltorg.get(line_arr[2]),ltorg.get(line_arr[2]).length())+"\n");
-		            				trecord= OPM.get(line_arr[1])+sappender4(ltorg.get(line_arr[2]),ltorg.get(line_arr[2]).length());
-		            			}
-		            			else if(line_arr[2].charAt(0)=='#') {
-		            				StringBuilder remover = new StringBuilder(line_arr[2]) ;
-	        		    			remover.deleteCharAt(0);
-	        		    			line_arr[2]=remover.toString();
-	        		    			if(!isNumeric(line_arr[2]) ) {
-	        		    			int computed = Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3);
-		            				
-	        		    			String temp=OPM.get(line_arr[1])+"0";
-	            					String temp_string = binary_maker(temp);
-	            					char[] binary_rep = temp_string.toCharArray();
-	            					binary_rep[6] = '0' ;
-	            					binary_rep[7] = '1' ;
-	            					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
-	            						binary_rep[10]='1';
-	            					}
-	            					else {
-	            						binary_rep[9]='1';
-	            					}
-	            					String object_code = new String(binary_rep);
-	            					int temp_conversion =  Integer.parseInt((object_code),2);
-	            					object_code= String.format("%x", temp_conversion);
-	            					if(computed<0) {
-	            					String computed_hex = String.format("%x", computed);
-	            					computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
-	            					if(object_code.length()<3) {
-	            						object_code = "0"+object_code; 
-	            					}
-	            					objectcode.write(object_code+computed_hex+"\n");
-	            					trecord= object_code+computed_hex;
-	            					}
-	            					else {
-	            						if(object_code.length()<3) {
-	                						object_code = "0"+object_code; 
-	                					}
-		            					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
-		            					trecord = object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length());
-	            					}
-	        		    			}
-	        		    			else if(isNumeric(line_arr[2])) {
-	        		    				objectcode.write(OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");	
-	        		    				trecord=OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length());
-	        		    			}
-		            			}
-	            				
-				    			else {
-				    				
-	        		    			if(!isNumeric(line_arr[2]) ) {
-	        		    				System.out.println(line_arr[2]);
-	        		    			int computed = Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3);
-		            				
-	        		    			String temp=OPM.get(line_arr[1])+"0";
-	            					String temp_string = binary_maker(temp);
-	            					char[] binary_rep = temp_string.toCharArray();
-	            					binary_rep[6] = '1' ;
-	            					binary_rep[7] = '1' ;
-	            					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]),16)+3)>-2048) {
-	            						binary_rep[10]='1';
-	            					}
-	            					else {
-	            						binary_rep[9]='1';
-	            					}
-	            					String object_code = new String(binary_rep);
-	            					int temp_conversion =  Integer.parseInt((object_code),2);
-	            					object_code= String.format("%x", temp_conversion);
-	            					if(computed<0) {
-	            					String computed_hex = String.format("%x", computed);
-	            					computed_hex = computed_hex.charAt(computed_hex.length()-3)+""+computed_hex.charAt(computed_hex.length()-2)+computed_hex.charAt(computed_hex.length()-1);;
-	            					if(object_code.length()<3) {
-	            						object_code = "0"+object_code; 
-	            					}
-	            					objectcode.write(object_code+computed_hex+"\n");
-	            					trecord=object_code+computed_hex;
-	            					}
-	            					else {
-	            						if(object_code.length()<3) {
-	                						object_code = "0"+object_code; 
-	                					}
-		            					objectcode.write(object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length())+"\n");
-		            					trecord=object_code+sappender3(String.format("%x", computed),String.format("%x", computed).length());
-	            					}
-	        		    			}
-	        		    			else if(isNumeric(line_arr[2])) {
-	        		    				objectcode.write(OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");	
-	        		    				trecord=OPM.get(line_arr[1])+sappender4(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length());
-	        		    			}
+             	if (line_type.equals("label")){ 
+             		StringBuilder remover = new StringBuilder(line_arr[2]) ;             		
 
-				    			}
+                     StringBuilder charrem = new StringBuilder(line_arr[2]) ;
+                     if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X' && line_arr[2].charAt(line_arr[2].length()-2)==',' ) {
+                           last = charrem.deleteCharAt(line_arr[2].length()-1).toString();
+                           charrem.deleteCharAt(line_arr[2].length()-2);
+                           line_arr[2]=charrem.toString();
+                         }
+                     else {
+                    	 last ="n";
+                     }
+                        if(line_arr[2].charAt(line_arr[2].length()-1 )== '@'||line_arr[2].charAt(line_arr[2].length()-1 )== '#'||line_arr[2].charAt(line_arr[2].length()-1 )== '=') 
+                         {
+                           first = charrem.deleteCharAt(0).toString();
+                           line_arr[2]=charrem.toString();
+                        }
+                        else {
+                        	first = "n";
+                        }
+                         if (first.charAt(0) == '='){
+                           charrem.deleteCharAt(0);
+                           charrem.deleteCharAt(line_arr[2].length()-1);
+                           line_arr[2]=charrem.toString();
+                           if(line_arr[2].charAt(0)=='C'||line_arr[2].charAt(0)=='X') {
+                        	   charrem.deleteCharAt(line_arr[2].length()-1);
+                               line_arr[2]=charrem.toString();   
+                           }
+                           storlit=ltorg.get(line_arr[2]);
+                         }
+                         else {
 
-	            				
-            			}
-            		}
-             		//objectcode.write(op.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length())+"\n");
-             		//String opcodevar = op.get(line_arr[1])+sappender4(st.get(line_arr[0]));
-             		//objectcode.write(opcodevar); 
-             		
+                           storlit = st.get(line_arr[2]);
+                         }
+
+                         
+                         String oc = OPM.get(line_arr[1])+"0";
+                         System.out.println(line_arr[1]);
+                         int oci = Integer.parseInt(oc,16);
+                         String temp = oc;
+                         String temp_string = binary_maker(temp);
+                         char[] binaryrep = temp_string.toCharArray();
+                         binaryrep[6]='1';
+                         binaryrep[7]='1';
+                         if (first.charAt(0) == '@'){
+                         binaryrep[7]='0';
+                         }
+                         else if (first.charAt(0) == '#'){
+                           binaryrep[6]='0';
+                         }
+                       if (!isNumeric(line_arr[2])){
+                        int computed = Integer.parseInt(storlit,16) - (Integer.parseInt(st.get(line_arr[0]),16)+3);
+
+                         if(computed<2048 && computed>-2048 ){
+                           destination = sappender3(String.format("%x",computed),String.format("%x",computed).length());
+                         }
+                         else{
+                           String basegeter = st.get(st.get("base"));
+                           int decdest = Integer.parseInt(storlit,16)-Integer.parseInt(basegeter,16);
+                           destination = sappender3(String.format("%x",decdest),String.format("%x",decdest).length());
+                         }
+                       }
+                       else if (isNumeric(line_arr[2])){
+                         destination = sappender6(String.format("%x",line_arr[2]),String.format("x",line_arr[2]).length());
+                       }
+                          temp_string = new String(binaryrep);
+                          oc = binary_reverse(temp_string);
+                          String fullcode = oc+destination;
+                          objectcode.write(fullcode);
+                          trecord = fullcode;
+                      
                     }
              	
 	else if (line_type.equals("word")){
@@ -1561,6 +1451,8 @@ public class assembler {
                myfile= myfile + ".txt";
                List<String> temp_lit = new ArrayList<String>();
                List<String> loccounter = new ArrayList<String>();
+               String bin = "01001000000000000001000000110111";
+               System.out.println(binary_reverse(bin));
                Map<String,String > LTORG = new HashMap<>();//hashmap OPcode to simle
                Map<String,String > OP = new HashMap<>();//hashmap OPcode to simle
                Map<String,String > ST = new HashMap<>();//symble table
