@@ -1131,16 +1131,18 @@ public class assembler {
 		}
 		System.out.println(OPM.get(line_arr[0]));
 		int liner=Integer.parseInt(OPM.get(line_arr[0]),16);
-		liner=(liner+3)*10;
+		liner=(liner+3);
+		String adder =""+'0';
         if(first.charAt(0)=='+') {
         	liner=liner+1;
         	destination="00000";
+        	adder = ""+'1';
         }
         else {
         destination ="000";
         		
         }
-        oc = String.format("%x", liner); 
+        oc = String.format("%x", liner)+adder; 
         
         String fullcode = oc+destination;
         objectcode.write(fullcode+"\n");                        
@@ -1227,7 +1229,7 @@ public class assembler {
                }
                else if (isNumeric(line_arr[1])){
                  
-                 destination = sappender6(line_arr[1],line_arr[1].length());
+                 destination = sappender3(line_arr[1],line_arr[1].length());
                }
                   temp_string = new String(binaryrep);
                   oc = binary_reverse(temp_string);
