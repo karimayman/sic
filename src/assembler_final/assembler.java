@@ -324,7 +324,10 @@ public class assembler {
     			type ="format1";
     		}
     		else if(arr_token[0].equals("RSUB")) {
-    			type="intruction";
+    			type="RSUB";
+    		}
+    		else if(arr_token[0].equals("+RSUB")) {
+    			type="+RSUB";
     		}
     		else if(arr_token[0].equals("LTORG")) {
     			type="ltorg";
@@ -504,7 +507,7 @@ public class assembler {
 				    		
 
 				    			littable.println(temp_lit.get(i)+" "+temp_holder+" "+string_size+" "+String.format("%x", pccounter));
-				    			System.out.println(temp_holder);
+				    			
 				    			ltorg.put(temp_holder, String.format("%x", pccounter));
 				    			pccounter=pccounter+(inted_size);
 
@@ -520,7 +523,6 @@ public class assembler {
 				    			littable.println(temp_lit.get(i)+" "+value+" "+temp_holder.length()+" "+String.format("%x", pccounter));
 
 				    			ltorg.put(temp_holder, String.format("%x", pccounter));
-				    			System.out.println(ltorg.get(temp_holder));
 
 				    			int inted_size=temp_holder.length();	
 				    			pccounter=pccounter+(inted_size);
@@ -645,6 +647,18 @@ public class assembler {
 		    	else if (line_type.equals("basel")){
 		    		st.put("base", line_arr[2]);
 		    	}
+		    	else if (line_type.equals("RSUB")) {
+                    pass1counter.println(String.format("%x", pccounter));
+                    loccounter.add(String.format("%x", pccounter));
+		    		pccounter=pccounter+3;
+		    		
+		    	}
+		    	else if (line_type.equals("+RSUB")) {
+                    pass1counter.println(String.format("%x", pccounter));
+                    loccounter.add(String.format("%x", pccounter));
+		    		pccounter=pccounter+4;
+		    		
+		    	}
 		    	else if (line_type.equals("instruction")){	
                             pass1counter.println(String.format("%x", pccounter));
                             loccounter.add(String.format("%x", pccounter));
@@ -752,7 +766,6 @@ public class assembler {
                          char[] binaryrep = temp_string.toCharArray();
                          binaryrep[6]='1';
                          binaryrep[7]='1';
-                         System.out.println(last);
                          if(last.charAt(0)=='X') {
                         	 binaryrep[8]='1';
                          				}
@@ -772,7 +785,6 @@ public class assembler {
                          }
                          else{
                         	 binaryrep[9]='1';
-                        	 System.out.println(st.get(st.get("base"))+" "+computed+" "+line_arr[0]+" "+line_arr[2]);
                            String basegeter = st.get(st.get("base"));
                            int decdest = Integer.parseInt(storlit,16)-Integer.parseInt(basegeter,16);
                            destination = sappender3(String.format("%x",decdest),String.format("%x",decdest).length());
@@ -782,11 +794,9 @@ public class assembler {
                          }
                        }
                        else if (isNumeric(line_arr[2])){
-                    	   System.out.println(line_arr[0]+"  "+line_arr[2]);
-                         destination = sappender6(String.format("%x",line_arr[2]),String.format("x",line_arr[2]).length());
+                         destination = sappender6(line_arr[2],line_arr[2].length());
                        }
                           temp_string = new String(binaryrep);
-                          System.out.println(temp_string+"uaasd");
                           oc = binary_reverse(temp_string);
                           String fullcode = oc+destination;
                           objectcode.write(fullcode+"\n");
@@ -966,7 +976,6 @@ public class assembler {
                  binaryrep[6]='1';
                  binaryrep[7]='1';
                  binaryrep[11]='1';
-                 System.out.println(last);
                  if(last.charAt(0)=='X') {
                    binaryrep[8]='1';
                         }
@@ -980,11 +989,9 @@ public class assembler {
                 destination = sappender5(storlit,storlit.length());
                }
                else if (isNumeric(line_arr[2])){
-                 System.out.println(line_arr[0]+"  "+line_arr[2]);
-                 destination = sappender5(String.format("%x",line_arr[2]),String.format("x",line_arr[2]).length());
+                 destination = sappender5(line_arr[2],line_arr[2].length());
                }
                   temp_string = new String(binaryrep);
-                  System.out.println(temp_string+"uaasd");
                   oc = binary_reverse(temp_string);
                   String fullcode = oc+destination;
                   objectcode.write(fullcode+"\n");
@@ -1047,7 +1054,6 @@ public class assembler {
                  binaryrep[6]='1';
                  binaryrep[7]='1';
                  binaryrep[11]='1';
-                 System.out.println(last);
                  if(last.charAt(0)=='X') {
                    binaryrep[8]='1';
                         }
@@ -1058,16 +1064,14 @@ public class assembler {
                    binaryrep[6]='0';
                  }
                if (!isNumeric(line_arr[1])||first.charAt(0)=='='){
-            	   System.out.println(line_arr[1]);
                    destination = sappender5(storlit,storlit.length());
 
                }
                else if (isNumeric(line_arr[1])){
                  
-                 destination = sappender5(String.format("%x",line_arr[1]),String.format("x",line_arr[1]).length());
+                 destination = sappender5(line_arr[1],line_arr[1].length());
                }
                   temp_string = new String(binaryrep);
-                  System.out.println(temp_string+"uaasd");
                   oc = binary_reverse(temp_string);
                   String fullcode = oc+destination;
                   objectcode.write(fullcode+"\n");                        
@@ -1117,7 +1121,35 @@ public class assembler {
 		//objectcode.write("\n");       
 		tflag="b";
 	}
+	else if (line_type.equals("RSUB")||line_type.equals("+RSUB")){
+		first =""+line_arr[0].charAt(0);
+		String oc="";
+		if (first.charAt(0)=='+') {
+			 StringBuilder charrem = new StringBuilder(line_arr[0]) ;
+			 charrem.deleteCharAt(0);
+			 line_arr[0]=charrem.toString();
+		}
+		System.out.println(OPM.get(line_arr[0]));
+		int liner=Integer.parseInt(OPM.get(line_arr[0]),16);
+		liner=(liner+3)*10;
+        if(first.charAt(0)=='+') {
+        	liner=liner+1;
+        	destination="00000";
+        }
+        else {
+        destination ="000";
+        		
+        }
+        oc = String.format("%x", liner); 
+        
+        String fullcode = oc+destination;
+        objectcode.write(fullcode+"\n");                        
+       trecord = fullcode;
+       htme_counter_flag=1;
+	}  
 	else if (line_type.equals("instruction")){	
+       
+
         StringBuilder remover = new StringBuilder(line_arr[1]) ;
         //StringBuilder oprem = new StringBuilder(line_arr[1]);
         //oprem.deleteCharAt(0);
@@ -1159,8 +1191,6 @@ public class assembler {
 
                    storlit = st.get(line_arr[1]);
                  }
-                 
-                 
                  String oc = OPM.get(line_arr[0])+"0";
                  int oci = Integer.parseInt(oc,16);
                  String temp = oc;
@@ -1168,7 +1198,6 @@ public class assembler {
                  char[] binaryrep = temp_string.toCharArray();
                  binaryrep[6]='1';
                  binaryrep[7]='1';
-                 System.out.println(last);
                  if(last.charAt(0)=='X') {
                    binaryrep[8]='1';
                         }
@@ -1179,7 +1208,7 @@ public class assembler {
                    binaryrep[6]='0';
                  }
                if (!isNumeric(line_arr[1])||first.charAt(0)=='='){
-                 System.out.println(storlit);
+                 
                 int computed = Integer.parseInt(storlit,16) - (Integer.parseInt(loccounter.get(htme_counter),16)+3);
 
                  if(computed<2048 && computed>-2048 ){
@@ -1188,7 +1217,6 @@ public class assembler {
                  }
                  else{
                    binaryrep[9]='1';
-                   System.out.println(st.get(st.get("base"))+" "+computed+" "+loccounter.get(htme_counter)+" "+line_arr[1]);
                    String basegeter = st.get(st.get("base"));
                    int decdest = Integer.parseInt(storlit,16)-Integer.parseInt(basegeter,16);
                    destination = sappender3(String.format("%x",decdest),String.format("%x",decdest).length());
@@ -1199,10 +1227,9 @@ public class assembler {
                }
                else if (isNumeric(line_arr[1])){
                  
-                 destination = sappender6(String.format("%x",line_arr[1]),String.format("x",line_arr[1]).length());
+                 destination = sappender6(line_arr[1],line_arr[1].length());
                }
                   temp_string = new String(binaryrep);
-                  System.out.println(temp_string+"uaasd");
                   oc = binary_reverse(temp_string);
                   String fullcode = oc+destination;
                   objectcode.write(fullcode+"\n");                        
@@ -1214,7 +1241,7 @@ public class assembler {
 		}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-             	if(tflag!="b") {
+             /*	if(tflag!="b") {
              	//	 while ((tline = tbringer.readLine()) != null) { 
            //  	        trecord = tline;
              	//       System.out.println(trecord);
@@ -1254,7 +1281,7 @@ public class assembler {
 		             		HTME.write("\n");
 		             		count_flag = 0;
 		             		 tflag = "A";
-		             	}
+		             	}*/
              	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                
                 if(htme_counter_flag==1) {
@@ -1262,6 +1289,10 @@ public class assembler {
                 	htme_counter_flag=0;
                 }
                 }
+             	  if(htme_counter_flag==1) {
+                  	htme_counter++;
+                  	htme_counter_flag=0;
+                  }
                 for(int z = 0; z<=mrecord.size()-1;z++ ) {
                 	HTME.write(mrecord.get(z)+"\n");
                 
@@ -1290,8 +1321,6 @@ public class assembler {
                myfile= myfile + ".txt";
                List<String> temp_lit = new ArrayList<String>();
                List<String> loccounter = new ArrayList<String>();
-               String bin = "01001000000000000001000000110111";
-               System.out.println(binary_reverse(bin));
                Map<String,String > LTORG = new HashMap<>();//hashmap OPcode to simle
                Map<String,String > OP = new HashMap<>();//hashmap OPcode to simle
                Map<String,String > ST = new HashMap<>();//symble table
