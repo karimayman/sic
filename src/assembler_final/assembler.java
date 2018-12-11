@@ -888,176 +888,99 @@ public class assembler {
 		
 	}
 	else if (line_type.equals("format4")){
- 		if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X'&&line_arr[2].charAt(line_arr[2].length()-2 )== ',' ) {
- 			StringBuilder remover = new StringBuilder(line_arr[2]) ;
-			remover.deleteCharAt(line_arr[2].length()-1);
-			remover.deleteCharAt(line_arr[2].length()-2);
-			line_arr[2]=remover.toString();
-			//String temp=OPM.get(line_arr[1])+"0";//sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
- 			String temp=OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length());
-			String temp_string = binary_maker(temp);
-			char[] binary_rep = temp_string.toCharArray();
-			if(line_arr[1].charAt(0)=='@') {
-			binary_rep[6] = '1' ;
-			binary_rep[7] = '0' ;
-			}
-			else if(line_arr[1].charAt(0)=='#') {
-				binary_rep[7] = '1' ;
-				binary_rep[6] = '0' ;
-				}
-			else {
-				binary_rep[6] = '1' ;
-				binary_rep[7] = '1' ;
-			}
-			binary_rep[8] = '1' ;
-			binary_rep[11]='1';
-			String object_code = new String(binary_rep);
-			int temp_conversion = Integer.parseInt(object_code,2);
-			object_code= String.format("%x", temp_conversion);
-			objectcode.write(object_code+"\n");
-			trecord=object_code;
-	}
-		else {if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X'&&line_arr[2].charAt(line_arr[2].length()-2 )== ',' ) {
-			//int indexed = Integer.parseInt(st.get(line_arr[1]),16)+ 32768;
-			//String instruction_helper = String.format("%x", indexed);
-			//objectcode.write(OPM.get(line_arr[0])+sappender4(instruction_helper,instruction_helper.length())+"\n");
- 			StringBuilder remover = new StringBuilder(line_arr[2]) ;
-			remover.deleteCharAt(line_arr[2].length()-1);
-			remover.deleteCharAt(line_arr[2].length()-2);
-			line_arr[2]=remover.toString();
- 			String temp=OPM.get(line_arr[1])+sappender4(st.get(line_arr[2]),st.get(line_arr[2]).length());
-			String temp_string = binary_maker(temp);
-			char[] binary_rep = temp_string.toCharArray();
-			if(line_arr[1].charAt(0)=='@') {
-			binary_rep[6] = '1' ;
-			binary_rep[7] = '0' ;
-			}
-			else if(line_arr[1].charAt(0)=='#') {
-				binary_rep[7] = '1' ;
-				binary_rep[6] = '0' ;
-				}
-			else {
-				binary_rep[6] = '1' ;
-				binary_rep[7] = '1' ;
-			}
-			binary_rep[8] = '1' ;
-			binary_rep[11]='1';
-			String object_code = new String(binary_rep);
-			int temp_conversion = Integer.parseInt(object_code,2);
-			object_code= String.format("%x", temp_conversion);
-			objectcode.write(object_code+"\n");
-			trecord=object_code;
-			int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
-			mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
-		}
-	    	else if(!isNumeric(line_arr[2]) ) {
-    				if(line_arr[2].charAt(0)=='@') {
-    					StringBuilder remover = new StringBuilder(line_arr[2]) ;
-		    			remover.deleteCharAt(0);
-		    			line_arr[2]=remover.toString();
-		    			if(!isNumeric(line_arr[2]) ) {
-    					String temp=OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length());
-    					//String hex = Integer.toString(temp);
-    					//temp = Integer.parseInt(hex,16);
-    					String temp_string = binary_maker(temp);
-    					char[] binary_rep = temp_string.toCharArray();
-    					binary_rep[6] = '1' ;
-    					binary_rep[7] = '0' ;
-    					binary_rep[11] = '1' ;
-    					if (Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]))+3)<2048 &&Integer.parseInt(st.get(line_arr[2]),16) - (Integer.parseInt(st.get(line_arr[0]))+3)>-2048) {
-    						binary_rep[10]='1';
-    					}
-    					else {
-    						binary_rep[9]='1';
-    					}
-    					binary_rep[11]='1';
-    					String object_code = new String(binary_rep);
-    					int temp_conversion = Integer.parseInt(object_code,2);
-    					object_code= String.format("%x", temp_conversion);
-    					if(object_code.length()==7) {
-    						object_code = '0'+object_code;
-    					}
-        				objectcode.write(object_code+"\n");
-        				trecord=object_code;
-        				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
-        				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
-		    			}
-    				
-		    			else /*if(isNumeric(line_arr[2]))*/ {
-		    				objectcode.write(OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");	
-		    				trecord=OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length());
-		    			}
-    				}
-        			else if( line_arr[2].charAt(0)=='=') {
-        				objectcode.write(OPM.get(line_arr[1])+sappender6(ltorg.get(line_arr[2]),ltorg.get(line_arr[2]).length())+"\n");
-        				trecord = OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length());
-        				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
-        				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
-        			}
-        			else if(line_arr[2].charAt(0)=='#') {
-    					StringBuilder remover = new StringBuilder(line_arr[2]) ;
-		    			remover.deleteCharAt(0);
-		    			line_arr[2]=remover.toString();
-		    			if(!isNumeric(line_arr[2])) {
-        					String temp=OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length());
-        					//String hex = Integer.toString(temp);
-        					//temp = Integer.parseInt(hex,16);
-        					String temp_string = binary_maker(temp) ;
-        					char[] binary_rep = temp_string.toCharArray();
-        					binary_rep[7] = '1' ;
-        					binary_rep[6] = '0' ;
-        					binary_rep[11] = '1' ;
-        					String object_code = new String(binary_rep);
-        					int temp_conversion = Integer.parseInt(object_code,2);
-        					object_code= String.format("%x", temp_conversion);
-        					if(object_code.length()==7) {
-        						object_code = '0'+object_code;
-        					}
-            				objectcode.write(object_code+"\n");
-            				trecord=object_code;
-            				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
-            				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
+        StringBuilder remover = new StringBuilder(line_arr[2]) ;
+        StringBuilder oprem = new StringBuilder(line_arr[1]);
+        oprem.deleteCharAt(0);
+        line_arr[1]=oprem.toString();               
 
-		    			}
-		    			else  {
-		    				
-		    				objectcode.write(OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length())+"\n");
-		    				trecord=OPM.get(line_arr[1])+sappender6(String.format("%x", line_arr[2]),String.format("%x", line_arr[2]).length());
-		    			}
-        			}
-		    			else {
-		    				StringBuilder remover_helper1 = new StringBuilder(line_arr[1]) ;
-			    			remover_helper1.deleteCharAt(0);
-			    			line_arr[1]=remover_helper1.toString();
-	    					System.out.println(line_arr[1]);
+             StringBuilder charrem = new StringBuilder(line_arr[2]) ;
+             if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X' && line_arr[2].charAt(line_arr[2].length()-2)==',' ) {
+                last = line_arr[2].charAt(line_arr[2].length()-1)+"";
+                 charrem.deleteCharAt(line_arr[2].length()-1);
+                   charrem.deleteCharAt(line_arr[2].length()-2);
+                   line_arr[2]=charrem.toString();
+                 }
+             else {
+               last ="n";
+             }
+                if(line_arr[2].charAt(0)== '@'||line_arr[2].charAt(0)== '#'||line_arr[2].charAt(0)== '=') 
+                 {  
+                    first= line_arr[2].charAt(0)+"";
+                   charrem.deleteCharAt(0);
+                   line_arr[2]=charrem.toString();
+                }
+                else {
+                  first = "n";
+                }
+                
+                 if (first.charAt(0) == '='){
+                   if(line_arr[2].charAt(0)=='C'||line_arr[2].charAt(0)=='X') {
+                       charrem.deleteCharAt(0);
+                   }
+                   charrem.deleteCharAt(0);
+                   charrem.deleteCharAt(line_arr[2].length()-3);
 
-		    				String temp=OPM.get(line_arr[1])+sappender6(st.get(line_arr[2]),st.get(line_arr[2]).length());
-        					System.out.println(temp);
+                   line_arr[2]=charrem.toString();
+                   
+                   storlit=ltorg.get(line_arr[2]);
+                   
+                 }
+                 else {
 
-        					//String hex = Integer.toString(temp);
-        					//temp = Integer.parseInt(hex,16);
-        					String temp_string = binary_maker(temp) ;
-        					System.out.println(temp_string);
-        					char[] binary_rep = temp_string.toCharArray();
-        					binary_rep[6] = '1' ;
-        					binary_rep[7] = '1' ;
-        					binary_rep[11]='1';
-        					String object_code = new String(binary_rep);
-        					System.out.println(object_code);
+                   storlit = st.get(line_arr[2]);
+                 }
+                 
+                 
+                 String oc = OPM.get(line_arr[1])+"0";
+                 int oci = Integer.parseInt(oc,16);
+                 String temp = oc;
+                 String temp_string = binary_maker(temp);
+                 char[] binaryrep = temp_string.toCharArray();
+                 binaryrep[6]='1';
+                 binaryrep[7]='1';
+                 binaryrep[11]='1';
+                 System.out.println(last);
+                 if(last.charAt(0)=='X') {
+                   binaryrep[8]='1';
+                        }
+                 if (first.charAt(0) == '@'){
+                 binaryrep[7]='0';
+                 }
+                 else if (first.charAt(0) == '#'){
+                   binaryrep[6]='0';
+                 }
+               if (!isNumeric(line_arr[2])||first.charAt(0)=='='){
+                 System.out.println(storlit);
+                int computed = Integer.parseInt(storlit,16) - (Integer.parseInt(st.get(line_arr[0]),16)+3);
 
-        					int temp_conversion = Integer.parseInt(object_code,2);
-        					object_code= String.format("%x", temp_conversion);
-        					if(object_code.length()==7) {
-        						object_code = '0'+object_code;
-        					}
-            				objectcode.write(object_code+"\n");
-            				trecord=object_code;
-            				int m  = Integer.parseInt(st.get(line_arr[0]),16)+1;
-            				mrecord.add("M"+sappender6(String.format("%x", m),String.format("%x", m).length())+"05");
-		    			}
-        			}
-    				
-			}
+                 if(computed<2048 && computed>-2048 ){
+                   binaryrep[10]='1';
+                   destination = sappender3(String.format("%x",computed),String.format("%x",computed).length());
+                 }
+                 else{
+                   binaryrep[9]='1';
+                   System.out.println(st.get(st.get("base"))+" "+computed+" "+line_arr[0]+" "+line_arr[2]);
+                   String basegeter = st.get(st.get("base"));
+                   int decdest = Integer.parseInt(storlit,16)-Integer.parseInt(basegeter,16);
+                   destination = sappender3(String.format("%x",decdest),String.format("%x",decdest).length());
+                 }
+                 if (computed<0) {
+                   destination =""+destination.charAt(destination.length()-3)+destination.charAt(destination.length()-2)+destination.charAt(destination.length()-1);
+                 }
+               }
+               else if (isNumeric(line_arr[2])){
+                 System.out.println(line_arr[0]+"  "+line_arr[2]);
+                 destination = sappender6(String.format("%x",line_arr[2]),String.format("x",line_arr[2]).length());
+               }
+                  temp_string = new String(binaryrep);
+                  System.out.println(temp_string+"uaasd");
+                  oc = binary_reverse(temp_string);
+                  String fullcode = oc+destination;
+                  objectcode.write(fullcode+"\n");
+                  int mrecordhelper = Integer.parseInt(st.get(line_arr[0]),16);
+                mrecord.add("M"+sappender6(String.format("%x",mrecordhelper),String.format("%x", mrecordhelper).length())+"05");
+                 trecord = fullcode;
+
 		}
 		
 	 
