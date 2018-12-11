@@ -1134,7 +1134,6 @@ public class assembler {
 		liner=(liner+3);
 		String adder =""+'0';
         if(first.charAt(0)=='+') {
-        	liner=liner+1;
         	destination="00000";
         	adder = ""+'1';
         }
