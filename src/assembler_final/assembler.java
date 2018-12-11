@@ -977,7 +977,7 @@ public class assembler {
                    binaryrep[6]='0';
                  }
                if (!isNumeric(line_arr[2])||first.charAt(0)=='='){
-                destination = sappender5(st.get(line_arr[2]),st.get(line_arr[2]).length());
+                destination = sappender5(storlit,storlit.length());
                }
                else if (isNumeric(line_arr[2])){
                  System.out.println(line_arr[0]+"  "+line_arr[2]);
@@ -1058,7 +1058,8 @@ public class assembler {
                    binaryrep[6]='0';
                  }
                if (!isNumeric(line_arr[1])||first.charAt(0)=='='){
-                   destination = sappender5(st.get(line_arr[1]),st.get(line_arr[1]).length());
+            	   System.out.println(line_arr[1]);
+                   destination = sappender5(storlit,storlit.length());
 
                }
                else if (isNumeric(line_arr[1])){
