@@ -184,6 +184,33 @@ public class assembler {
 		}
 		return zero;
 	}  
+	public static String sappender5(String value,int iteration){
+		String zero = "";
+		if (iteration == 3) {
+			zero="00";
+			zero =zero+value;
+		}
+		else if(iteration ==2) {
+			zero="000";
+			zero = zero+value;
+		}
+		else if(iteration ==1) {
+			zero="0000";
+			zero = zero+value;
+		}
+		else if(iteration ==4) {
+			zero="0";
+			zero = zero+value;
+		}
+		else if(iteration ==5) {
+			zero="";
+			zero = zero+value;
+		}
+		else {
+			zero = value;
+		}
+		return zero;
+	}
 	public static String sappender6(String value,int iteration){
 		String zero = "";
 		if (iteration == 3) {
@@ -950,27 +977,11 @@ public class assembler {
                    binaryrep[6]='0';
                  }
                if (!isNumeric(line_arr[2])||first.charAt(0)=='='){
-                 System.out.println(storlit);
-                int computed = Integer.parseInt(storlit,16) - (Integer.parseInt(st.get(line_arr[0]),16)+3);
-
-                 if(computed<2048 && computed>-2048 ){
-                   binaryrep[10]='1';
-                   destination = sappender3(String.format("%x",computed),String.format("%x",computed).length());
-                 }
-                 else{
-                   binaryrep[9]='1';
-                   System.out.println(st.get(st.get("base"))+" "+computed+" "+line_arr[0]+" "+line_arr[2]);
-                   String basegeter = st.get(st.get("base"));
-                   int decdest = Integer.parseInt(storlit,16)-Integer.parseInt(basegeter,16);
-                   destination = sappender3(String.format("%x",decdest),String.format("%x",decdest).length());
-                 }
-                 if (computed<0) {
-                   destination =""+destination.charAt(destination.length()-3)+destination.charAt(destination.length()-2)+destination.charAt(destination.length()-1);
-                 }
+                destination = sappender5(st.get(line_arr[2]),st.get(line_arr[2]).length());
                }
                else if (isNumeric(line_arr[2])){
                  System.out.println(line_arr[0]+"  "+line_arr[2]);
-                 destination = sappender6(String.format("%x",line_arr[2]),String.format("x",line_arr[2]).length());
+                 destination = sappender5(String.format("%x",line_arr[2]),String.format("x",line_arr[2]).length());
                }
                   temp_string = new String(binaryrep);
                   System.out.println(temp_string+"uaasd");
@@ -1047,27 +1058,12 @@ public class assembler {
                    binaryrep[6]='0';
                  }
                if (!isNumeric(line_arr[1])||first.charAt(0)=='='){
-                 System.out.println(storlit);
-                int computed = Integer.parseInt(storlit,16) - (Integer.parseInt(loccounter.get(htme_counter),16)+3);
+                   destination = sappender5(st.get(line_arr[1]),st.get(line_arr[1]).length());
 
-                 if(computed<2048 && computed>-2048 ){
-                   binaryrep[10]='1';
-                   destination = sappender3(String.format("%x",computed),String.format("%x",computed).length());
-                 }
-                 else{
-                   binaryrep[9]='1';
-                   System.out.println(st.get(st.get("base"))+" "+computed+" "+loccounter.get(htme_counter)+" "+line_arr[1]);
-                   String basegeter = st.get(st.get("base"));
-                   int decdest = Integer.parseInt(storlit,16)-Integer.parseInt(basegeter,16);
-                   destination = sappender3(String.format("%x",decdest),String.format("%x",decdest).length());
-                 }
-                 if (computed<0) {
-                   destination =""+destination.charAt(destination.length()-3)+destination.charAt(destination.length()-2)+destination.charAt(destination.length()-1);
-                 }
                }
                else if (isNumeric(line_arr[1])){
                  
-                 destination = sappender6(String.format("%x",line_arr[1]),String.format("x",line_arr[1]).length());
+                 destination = sappender5(String.format("%x",line_arr[1]),String.format("x",line_arr[1]).length());
                }
                   temp_string = new String(binaryrep);
                   System.out.println(temp_string+"uaasd");
