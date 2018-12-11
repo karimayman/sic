@@ -682,7 +682,8 @@ public class assembler {
 
                      StringBuilder charrem = new StringBuilder(line_arr[2]) ;
                      if(line_arr[2].charAt(line_arr[2].length()-1 )== 'X' && line_arr[2].charAt(line_arr[2].length()-2)==',' ) {
-                           last = charrem.deleteCharAt(line_arr[2].length()-1).toString();
+                    	 	last = line_arr[2].charAt(line_arr[2].length()-1)+"";
+                    	   charrem.deleteCharAt(line_arr[2].length()-1);
                            charrem.deleteCharAt(line_arr[2].length()-2);
                            line_arr[2]=charrem.toString();
                          }
@@ -698,7 +699,7 @@ public class assembler {
                         else {
                         	first = "n";
                         }
-                        System.out.println(first+"uaasd");
+                        
                          if (first.charAt(0) == '='){
                            if(line_arr[2].charAt(0)=='C'||line_arr[2].charAt(0)=='X') {
                                charrem.deleteCharAt(0);
@@ -709,22 +710,25 @@ public class assembler {
                            line_arr[2]=charrem.toString();
                            
                            storlit=ltorg.get(line_arr[2]);
-                           System.out.println(storlit);
+                           
                          }
                          else {
 
                            storlit = st.get(line_arr[2]);
                          }
-
+                         
                          
                          String oc = OPM.get(line_arr[1])+"0";
-                         System.out.println(line_arr[1]);
                          int oci = Integer.parseInt(oc,16);
                          String temp = oc;
                          String temp_string = binary_maker(temp);
                          char[] binaryrep = temp_string.toCharArray();
                          binaryrep[6]='1';
                          binaryrep[7]='1';
+                         System.out.println(last);
+                         if(last.charAt(0)=='X') {
+                        	 binaryrep[8]='1';
+                         				}
                          if (first.charAt(0) == '@'){
                          binaryrep[7]='0';
                          }
@@ -732,22 +736,22 @@ public class assembler {
                            binaryrep[6]='0';
                          }
                        if (!isNumeric(line_arr[2])||first.charAt(0)=='='){
-                    	   System.out.println(line_arr[2]);
+                    	   System.out.println(storlit);
                         int computed = Integer.parseInt(storlit,16) - (Integer.parseInt(st.get(line_arr[0]),16)+3);
 
                          if(computed<2048 && computed>-2048 ){
+                        	 binaryrep[10]='1';
                            destination = sappender3(String.format("%x",computed),String.format("%x",computed).length());
-                           if (computed<0) {
-                        	   destination =""+destination.charAt(destination.length()-1)+destination.charAt(destination.length()-2)+destination.charAt(destination.length()-3);
-                           }
                          }
                          else{
+                        	 binaryrep[9]='1';
+                        	 System.out.println(st.get(st.get("base"))+" "+computed+" "+line_arr[0]+" "+line_arr[2]);
                            String basegeter = st.get(st.get("base"));
                            int decdest = Integer.parseInt(storlit,16)-Integer.parseInt(basegeter,16);
                            destination = sappender3(String.format("%x",decdest),String.format("%x",decdest).length());
-                           if (computed<0) {
-                        	   destination =""+destination.charAt(destination.length()-1)+destination.charAt(destination.length()-2)+destination.charAt(destination.length()-3);
-                           }
+                         }
+                         if (computed<0) {
+                      	   destination =""+destination.charAt(destination.length()-3)+destination.charAt(destination.length()-2)+destination.charAt(destination.length()-1);
                          }
                        }
                        else if (isNumeric(line_arr[2])){
@@ -755,6 +759,7 @@ public class assembler {
                          destination = sappender6(String.format("%x",line_arr[2]),String.format("x",line_arr[2]).length());
                        }
                           temp_string = new String(binaryrep);
+                          System.out.println(temp_string+"uaasd");
                           oc = binary_reverse(temp_string);
                           String fullcode = oc+destination;
                           objectcode.write(fullcode+"\n");
@@ -1197,17 +1202,6 @@ public class assembler {
 		tflag="b";
 	}
 	else if (line_type.equals("instruction")){	
-		/*if(line_arr[1].charAt(line_arr[1].length()-1 )== 'X'&&line_arr[1].charAt(line_arr[1].length()-2 )== ',' ) {
-			System.out.println( st.get(line_arr[1]));
-			int indexed = Integer.parseInt(st.get(line_arr[1]));
-			String instruction_helper = String.format("%x", Integer.toString(indexed));
-		
-			
-		objectcode.write(op.get(line_arr[0])+sappender4(instruction_helper)+"\n");
-	}
-		else {*/
-			//if(!isNumeric(line_arr[1]))
-			//objectcode.write(OPM.get(line_arr[0])+sappender4(st.get(line_arr[1]),st.get(line_arr[1]).length())+"\n");
 		if(line_arr[1].charAt(line_arr[1].length()-1 )== 'X'&&line_arr[1].charAt(line_arr[1].length()-2 )== ',' ) {
 			StringBuilder remover = new StringBuilder(line_arr[1]) ;
 		remover.deleteCharAt(line_arr[1].length()-1);
