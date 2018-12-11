@@ -737,11 +737,17 @@ public class assembler {
 
                          if(computed<2048 && computed>-2048 ){
                            destination = sappender3(String.format("%x",computed),String.format("%x",computed).length());
+                           if (computed<0) {
+                        	   destination =""+destination.charAt(destination.length()-1)+destination.charAt(destination.length()-2)+destination.charAt(destination.length()-3);
+                           }
                          }
                          else{
                            String basegeter = st.get(st.get("base"));
                            int decdest = Integer.parseInt(storlit,16)-Integer.parseInt(basegeter,16);
                            destination = sappender3(String.format("%x",decdest),String.format("%x",decdest).length());
+                           if (computed<0) {
+                        	   destination =""+destination.charAt(destination.length()-1)+destination.charAt(destination.length()-2)+destination.charAt(destination.length()-3);
+                           }
                          }
                        }
                        else if (isNumeric(line_arr[2])){
