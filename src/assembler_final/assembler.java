@@ -794,7 +794,7 @@ public class assembler {
                          }
                        }
                        else if (isNumeric(line_arr[2])){
-                         destination = sappender6(line_arr[2],line_arr[2].length());
+                         destination = sappender3(line_arr[2],line_arr[2].length());
                        }
                           temp_string = new String(binaryrep);
                           oc = binary_reverse(temp_string);
