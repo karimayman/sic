@@ -826,8 +826,10 @@ public class assembler {
 			//line_arr[2]=ascii_maker(line_arr[2],line_arr[2].length());
 		
 		}*/
-		objectcode.write(sappender6(line_arr[2],line_arr[2].length())+"\n");
-		trecord=sappender6(line_arr[2],line_arr[2].length());
+		int temporary = Integer.parseInt(line_arr[2],16);
+		String tempagain = String.format("%x",temporary);
+		objectcode.write(sappender6(tempagain,tempagain.length())+"\n");
+		trecord=sappender6(tempagain,tempagain.length());
          }
 	else if (line_type.equals("byte")){
         		if(checker.equals("X")) {
@@ -918,8 +920,13 @@ public class assembler {
 			//remover.deleteCharAt(0);
 			//remover.deleteCharAt(line_arr[2].length()-3);
 			//line_arr[2]=remover.toString();
-			objectcode.write(String.format("%x",line_arr[2])+"\n");
-			trecord=String.format("%x",line_arr[2]);
+			int temporary = Integer.parseInt(line_arr[2],16);
+			String tempagain = String.format("%x",temporary);
+			if (tempagain.length()<1) {
+				tempagain="0"+tempagain;
+			}
+			objectcode.write(tempagain+"\n");
+			trecord=tempagain;
                     }
 		
 	}
