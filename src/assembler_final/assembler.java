@@ -918,8 +918,8 @@ public class assembler {
 			//remover.deleteCharAt(0);
 			//remover.deleteCharAt(line_arr[2].length()-3);
 			//line_arr[2]=remover.toString();
-			objectcode.write(sappender6(String.format("%x",line_arr[2]),String.format("%x",line_arr[2]).length())+"\n");
-			trecord=sappender6(String.format("%x",line_arr[2]),String.format("%x",line_arr[2]).length());
+			objectcode.write(String.format("%x",line_arr[2])+"\n");
+			trecord=String.format("%x",line_arr[2]);
                     }
 		
 	}
