@@ -458,8 +458,9 @@ public class assembler {
 		    	}
 		    	else if (line_type.equals("format4_2")) {
 		    		 pass1counter.println(String.format("%x", pccounter));
-		    		 pccounter +=0X4;
 		    		 loccounter.add(String.format("%x", pccounter));
+		    		 pccounter +=0X4;
+		    		
 		    		 
 		    	}
 		    	else if (line_type.equals("format1")) {
@@ -651,19 +652,16 @@ public class assembler {
                     pass1counter.println(String.format("%x", pccounter));
                     loccounter.add(String.format("%x", pccounter));
 		    		pccounter=pccounter+3;
-		    		
 		    	}
 		    	else if (line_type.equals("+RSUB")) {
                     pass1counter.println(String.format("%x", pccounter));
                     loccounter.add(String.format("%x", pccounter));
 		    		pccounter=pccounter+4;
-		    		
 		    	}
 		    	else if (line_type.equals("instruction")){	
                             pass1counter.println(String.format("%x", pccounter));
                             loccounter.add(String.format("%x", pccounter));
                             pccounter +=0X3;
-                            
 		    	}
 		    	
 		    
@@ -682,12 +680,14 @@ public class assembler {
         public static void pass2(String myfile,Map<String,String>op,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String > OPM,Map<String,String>ltorg,List<String> loccounter) throws FileNotFoundException{
             PrintWriter objectcode;
 			try {
+				int tlength=0;
+				int flagfirst=1;
 				int htme_counter_flag =0; 
 				String tflag="";
 				int count_flag = 0;
 				int proglength = 0;
 				String theader = "";
-				int tbegin=0 ;
+				String tbegin="" ;
 				String tstring="" ; 
 				String tstring_temp="";
 				String trecord="";
@@ -776,7 +776,6 @@ public class assembler {
                            binaryrep[6]='0';
                          }
                        if (!isNumeric(line_arr[2])||first.charAt(0)=='='){
-                    	   System.out.println(storlit);
                         int computed = Integer.parseInt(storlit,16) - (Integer.parseInt(st.get(line_arr[0]),16)+3);
 
                          if(computed<2048 && computed>-2048 ){
@@ -1129,7 +1128,6 @@ public class assembler {
 			 charrem.deleteCharAt(0);
 			 line_arr[0]=charrem.toString();
 		}
-		System.out.println(OPM.get(line_arr[0]));
 		int liner=Integer.parseInt(OPM.get(line_arr[0]),16);
 		liner=(liner+3);
 		String adder =""+'0';
@@ -1242,58 +1240,96 @@ public class assembler {
 		}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-             /*	if(tflag!="b") {
-             	//	 while ((tline = tbringer.readLine()) != null) { 
-           //  	        trecord = tline;
-             	//       System.out.println(trecord);
-             	//    }
-             		
-		             		if(count_flag==3) {
-		             		}
-		             		else {
-				             	tstring_temp=trecord;
-				             	if(tstring.length()+tstring_temp.length()<61) {
-						             	tstring =tstring+ tstring_temp;
-						             	count_flag=1;
-				             		}
-				             	else {
-					             		if(st.get(line_arr[0])!=null) {
-					             		proglength = Integer.parseInt(st.get(line_arr[0]),16)-tbegin;
-				             		}
-				             		else {
-				             				proglength = Integer.parseInt(loccounter.get(htme_counter),16)-tbegin;
-				             		}
-				             	theader =theader+sappender6(String.format("%x", proglength),String.format("%x", proglength).length());
-				             	//count_flag=0;
-				             	HTME.write(theader+tstring+"\n");
-				             	if(st.get(line_arr[0])!=null) {
-					             	theader ="T"+ st.get(line_arr[0]);             //+sappender6(proglength,proglength.length());
-					             	tbegin = Integer.parseInt(st.get(line_arr[0]),16);
-					             			}
-					             			else {
-					             				theader ="T"+ loccounter.get(htme_counter);       
-					                         	tbegin = Integer.parseInt(loccounter.get(htme_counter),16);
-					             			}
-				             	tstring = trecord;
-				             	}
-		             }
-		             	}
-		             	else {
-		             		HTME.write("\n");
-		             		count_flag = 0;
-		             		 tflag = "A";
-		             	}*/
+             	     if(tflag!="b"){
+             			  if(flagfirst==1){
+             			    flagfirst = 0;
+             			    if (st.get(line_arr[0])!=null){
+             			      tbegin = st.get(line_arr[0]);
+             			    }
+             			    else{
+
+             			      tbegin = loccounter.get(htme_counter);
+             			    }
+
+             			   tstring = tstring+trecord;
+
+             			   }
+             			else if(tstring.length()+trecord.length()<60){
+             			  tstring=tstring+trecord;
+             			  }
+
+             			else {
+             				if(!line_arr[0].equals("LTORG")) {
+             			    HTME.write("T"+sappender6(tbegin,tbegin.length())+String.format("%x",tlength)+tstring+"\n");
+             			    if (st.get(line_arr[0])!=null){
+             			      tbegin = st.get(line_arr[0]);
+             			    }
+             			    else{
+             			      tbegin = loccounter.get(htme_counter);
+             			    }
+             			    tlength=0;
+             			    tstring=trecord;
+             				}
+             			 }
+             			 ////////////////////////tlength//////////////////////////////////////
+
+             			      if (line_type.equals("format4")||line_type.equals("format4_2")||line_type.equals("+RSUB")){
+             			      tlength = tlength+4;
+             			      }
+             			      else if(line_type.equals("label")||line_type.equals("instruction")||line_type.equals("RSUB")){
+             			        tlength = tlength+3;
+             			      } 
+             			      else if(line_type.equals("format2")||line_type.equals("format2_label")){
+             			        tlength = tlength+2;
+             			     }
+             			     else if(line_type.equals("format1")||line_type.equals("format1_label")){
+             			       tlength = tlength+1;
+             			     }
+             			 ///////////////////////////////////////////////////////////////////////////
+             			    
+             			}
+
+
+             			else{
+             			        HTME.write("T"+sappender6(tbegin,tbegin.length())+String.format("%x",tlength)+tstring+"\n");
+                  			  System.out.println(tbegin);
+
+             			    if (st.get(line_arr[0])!=null){
+             			      tbegin = st.get(line_arr[0]);
+             			    }
+             			    else{
+             			      tbegin = loccounter.get(htme_counter);
+             			    }
+             			    tlength=0;
+             			    tstring=trecord;
+             			 
+             			 ////////////////////////tlength//////////////////////////////////////
+
+             			      if (line_type.equals("format4")||line_type.equals("format4_2")){
+             			      tlength = tlength+4;
+             			      }
+             			      else if(line_type.equals("label")||line_type.equals("instruction")){
+             			        tlength = tlength+3;
+             			      } 
+             			      else if(line_type.equals("format2")||line_type.equals("format2_label")){
+             			        tlength = tlength+2;
+             			     }
+             			     else if(line_type.equals("format1")||line_type.equals("format1_label")){
+             			       tlength = tlength+1;
+             			     }
+             			 ///////////////////////////////////////////////////////////////////////////  
+
+             			tflag = "A";
+             			}
+
              	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                
                 if(htme_counter_flag==1) {
                 	htme_counter++;
                 	htme_counter_flag=0;
-                }
-                }
-             	  if(htme_counter_flag==1) {
-                  	htme_counter++;
-                  	htme_counter_flag=0;
-                  }
+                	}
+                }//end of while loop 
+             	
                 for(int z = 0; z<=mrecord.size()-1;z++ ) {
                 	HTME.write(mrecord.get(z)+"\n");
                 
