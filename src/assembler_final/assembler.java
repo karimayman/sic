@@ -680,6 +680,7 @@ public class assembler {
         public static void pass2(String myfile,Map<String,String>op,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String > OPM,Map<String,String>ltorg,List<String> loccounter) throws FileNotFoundException{
             PrintWriter objectcode;
 			try {
+				int rrepeat=0;
 				int tlength=0;
 				int flagfirst=1;
 				int htme_counter_flag =0; 
@@ -826,7 +827,7 @@ public class assembler {
 			//line_arr[2]=ascii_maker(line_arr[2],line_arr[2].length());
 		
 		}*/
-		int temporary = Integer.parseInt(line_arr[2],16);
+		int temporary = Integer.parseInt(line_arr[2]);
 		String tempagain = String.format("%x",temporary);
 		objectcode.write(sappender6(tempagain,tempagain.length())+"\n");
 		trecord=sappender6(tempagain,tempagain.length());
@@ -920,9 +921,10 @@ public class assembler {
 			//remover.deleteCharAt(0);
 			//remover.deleteCharAt(line_arr[2].length()-3);
 			//line_arr[2]=remover.toString();
-			int temporary = Integer.parseInt(line_arr[2],16);
+			int temporary = Integer.parseInt(line_arr[2]);
 			String tempagain = String.format("%x",temporary);
-			if (tempagain.length()<1) {
+		
+			if (tempagain.length()==1) {
 				tempagain="0"+tempagain;
 			}
 			objectcode.write(tempagain+"\n");
@@ -1001,7 +1003,7 @@ public class assembler {
                   oc = binary_reverse(temp_string);
                   String fullcode = oc+destination;
                   objectcode.write(fullcode+"\n");
-                  int mrecordhelper = Integer.parseInt(st.get(line_arr[0]),16);
+                  int mrecordhelper = Integer.parseInt(st.get(line_arr[0]),16)+1;
                 mrecord.add("M"+sappender6(String.format("%x",mrecordhelper),String.format("%x", mrecordhelper).length())+"05");
                  trecord = fullcode;
 
@@ -1082,7 +1084,7 @@ public class assembler {
                   String fullcode = oc+destination;
                   objectcode.write(fullcode+"\n");                        
                  trecord = fullcode;
-                 int mrecordhelper = Integer.parseInt(loccounter.get(htme_counter),16);
+                 int mrecordhelper = Integer.parseInt(loccounter.get(htme_counter),16)+1;
                  mrecord.add("M"+sappender6(String.format("%x",mrecordhelper),String.format("%x", mrecordhelper).length())+"05");
 
 			htme_counter_flag=1;
@@ -1247,7 +1249,8 @@ public class assembler {
 		}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-             	     if(tflag!="b"){
+             	     if(tflag!="b"&&!line_type.equals("start")&&!line_type.equals("ltorg")&&!line_type.equals("base")){
+       			      
              			  if(flagfirst==1){
              			    flagfirst = 0;
              			    if (st.get(line_arr[0])!=null){
@@ -1261,6 +1264,16 @@ public class assembler {
              			   tstring = tstring+trecord;
 
              			   }
+             			  else if (rrepeat==1) {
+             				  rrepeat=0;
+             				 if (st.get(line_arr[0])!=null){
+                			      tbegin = st.get(line_arr[0]);
+                			    }
+                			    else{
+                			      tbegin = loccounter.get(htme_counter);
+                			    }
+             				 tstring=tstring+trecord;
+             			  }
              			else if(tstring.length()+trecord.length()<60){
              			  tstring=tstring+trecord;
              			  }
@@ -1297,35 +1310,16 @@ public class assembler {
              			}
 
 
-             			else{
+             			else if(!line_type.equals("start")&&!line_type.equals("ltorg")&&!line_type.equals("base")) {
+             				if(tstring.length()>0) {
              			        HTME.write("T"+sappender6(tbegin,tbegin.length())+String.format("%x",tlength)+tstring+"\n");
-                  			  System.out.println(tbegin);
-
-             			    if (st.get(line_arr[0])!=null){
-             			      tbegin = st.get(line_arr[0]);
-             			    }
-             			    else{
-             			      tbegin = loccounter.get(htme_counter);
-             			    }
+             				}
+             			    tbegin="";    
              			    tlength=0;
-             			    tstring=trecord;
-             			 
-             			 ////////////////////////tlength//////////////////////////////////////
-
-             			      if (line_type.equals("format4")||line_type.equals("format4_2")){
-             			      tlength = tlength+4;
-             			      }
-             			      else if(line_type.equals("label")||line_type.equals("instruction")){
-             			        tlength = tlength+3;
-             			      } 
-             			      else if(line_type.equals("format2")||line_type.equals("format2_label")){
-             			        tlength = tlength+2;
-             			     }
-             			     else if(line_type.equals("format1")||line_type.equals("format1_label")){
-             			       tlength = tlength+1;
-             			     }
-             			 ///////////////////////////////////////////////////////////////////////////  
-
+             			    tstring="";
+  
+             			rrepeat= 1;
+             			//System.out.println(rrepeat);
              			tflag = "A";
              			}
 
@@ -1373,8 +1367,8 @@ public class assembler {
                OP.put("ADD", "18");
                OP.put("ADDF", "58");
                OP.put("AND", "40");
-               OP.put("COPM", "28");
-               OP.put("COPMF", "88");
+               OP.put("COMP", "28");
+               OP.put("COMPF", "88");
                OP.put("DIV", "24");
                OP.put("DIVF", "64");
                OP.put("J", "3C");
@@ -1440,8 +1434,8 @@ public class assembler {
                OPM.put("ADD", "18");
                OPM.put("ADDF", "58");
                OPM.put("AND", "40");
-               OPM.put("COPMM", "28");
-               OPM.put("COPMMF", "88");
+               OPM.put("COMP", "28");
+               OPM.put("COMPF", "88");
                OPM.put("DIV", "24");
                OPM.put("DIVF", "64");
                OPM.put("J", "3C");
