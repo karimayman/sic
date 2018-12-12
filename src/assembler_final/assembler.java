@@ -1259,7 +1259,7 @@ public class assembler {
              			  }
 
              			else {
-             				if(!line_arr[0].equals("LTORG")) {
+             				if(!line_arr[0].equals("LTORG")&&!line_arr[0].equals("LTORG")) {
              			    HTME.write("T"+sappender6(tbegin,tbegin.length())+String.format("%x",tlength)+tstring+"\n");
              			    if (st.get(line_arr[0])!=null){
              			      tbegin = st.get(line_arr[0]);
