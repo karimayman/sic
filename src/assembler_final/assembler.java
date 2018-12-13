@@ -1249,7 +1249,7 @@ public class assembler {
 		}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-             	     if(tflag!="b"&&!line_type.equals("start")&&!line_type.equals("ltorg")&&!line_type.equals("base")){
+             	     if(tflag!="b"&&!line_type.equals("start")&&!line_type.equals("ltorg")&&!line_type.equals("base")&&!line_type.equals("equ")){
        			      
              			  if(flagfirst==1){
              			    flagfirst = 0;
@@ -1310,7 +1310,7 @@ public class assembler {
              			}
 
 
-             			else if(!line_type.equals("start")&&!line_type.equals("ltorg")&&!line_type.equals("base")) {
+             			else if(!line_type.equals("start")&&!line_type.equals("ltorg")&&!line_type.equals("base")&&!line_type.equals("equ")) {
              				if(tstring.length()>0) {
              			        HTME.write("T"+sappender6(tbegin,tbegin.length())+String.format("%x",tlength)+tstring+"\n");
              				}
