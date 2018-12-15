@@ -465,11 +465,13 @@ public class assembler {
 		    	}
 		    	else if (line_type.equals("format1")) {
 		    		 pass1counter.println(String.format("%x", pccounter));
+		    		 loccounter.add(String.format("%x", pccounter));
 		    		 pccounter +=0X1;
 		    		 
 		    	}
 		    	else if (line_type.equals("format2")) {
 		    		 pass1counter.println(String.format("%x", pccounter));
+		    		 loccounter.add(String.format("%x", pccounter));
 		    		 pccounter +=0X2;
 		    		 
 		    		 
@@ -1099,12 +1101,12 @@ public class assembler {
 			   objectcode.write(OPM.get(line_arr[0])+OPM.get(line_arr[1])+"0"+"\n");
 			   trecord=OPM.get(line_arr[0])+OPM.get(line_arr[1])+"0";
 		   }
-		
+		   htme_counter_flag=1;
 	}
 	else if (line_type.equals("format1")){
 		objectcode.write(OPM.get(line_arr[0])+"\n");
 		trecord=OPM.get(line_arr[0]);
-		   	
+		htme_counter_flag=1;   	
 	}
 	else if(line_type.equals("format2_label")) {
 		   //if(token.countTokens()>2) {
