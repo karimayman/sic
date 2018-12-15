@@ -1298,9 +1298,12 @@ public class assembler {
              			      if (line_type.equals("format4")||line_type.equals("format4_2")||line_type.equals("+RSUB")){
              			      tlength = tlength+4;
              			      }
-             			      else if(line_type.equals("label")||line_type.equals("instruction")||line_type.equals("RSUB")){
+             			      else if(line_type.equals("label")||line_type.equals("instruction")||line_type.equals("RSUB")||line_type.equals("word")){
              			        tlength = tlength+3;
              			      } 
+             			      else if(line_type.equals("byte")) {
+             			    	tlength = tlength+(trecord.length()/2);
+             			      }
              			      else if(line_type.equals("format2")||line_type.equals("format2_label")){
              			        tlength = tlength+2;
              			     }
