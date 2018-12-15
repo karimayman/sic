@@ -1251,8 +1251,7 @@ public class assembler {
 		}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-             	     if(tflag!="b"&&!line_type.equals("start")&&!line_type.equals("ltorg")&&!line_type.equals("base")&&!line_type.equals("equ")){
-       			      
+             	     if(tflag!="b"&&!line_type.equals("start")&&!line_type.equals("ltorg")&&!line_type.equals("base")&&!line_type.equals("equ")&&!line_type.equals("end")){
              			  if(flagfirst==1){
              			    flagfirst = 0;
              			    if (st.get(line_arr[0])!=null){
@@ -1315,7 +1314,7 @@ public class assembler {
              			}
 
 
-             			else if(!line_type.equals("start")&&!line_type.equals("ltorg")&&!line_type.equals("base")&&!line_type.equals("equ")) {
+             			else if(!line_type.equals("start")&&!line_type.equals("ltorg")&&!line_type.equals("base")&&!line_type.equals("equ")&&!line_type.equals("end")) {
              				if(tstring.length()>0) {
              			        HTME.write("T"+sappender6(tbegin,tbegin.length())+String.format("%x",tlength)+tstring+"\n");
              				}
@@ -1327,6 +1326,11 @@ public class assembler {
              			//System.out.println(rrepeat);
              			tflag = "A";
              			}
+             			else if(line_type.equals("end")) {
+             					System.out.println("mafrood hena");
+             			        HTME.write("T"+sappender6(tbegin,tbegin.length())+String.format("%x",tlength)+tstring+"\n");
+             				}
+             			
 
              	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                
@@ -1334,6 +1338,7 @@ public class assembler {
                 	htme_counter++;
                 	htme_counter_flag=0;
                 	}
+                
                 }//end of while loop 
              	
                 for(int z = 0; z<=mrecord.size()-1;z++ ) {
