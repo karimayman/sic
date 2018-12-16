@@ -336,8 +336,9 @@ public class assembler {
     	return type; 
    }
 	
-	public static void pass1(String myfile,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String>ltorg,List<String> loccounter) throws IOException {
+	public static void pass1(String myfile,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String>ltorg,List<String> loccounter,List<String> litpool,List<String> litval,List<String> litlength,List<String> litloc) throws IOException {
 		File file = new File(myfile);
+		int iteration = 0;
 		String line = "";
 		String line_type = "";
 		int pccounter = 0X0,intialcounter = 0X0;
@@ -490,6 +491,7 @@ public class assembler {
 		    		 pccounter +=0X1;
 		    	}
 		    	else if(line_type.equals("ltorg")||line_type.equals("end")) {
+		    		litpool.add( Integer.toString(temp_lit.size()));
 		    		if(!temp_lit.isEmpty()) {
 		    			for (int i=0;i<temp_lit.size();i++) {
 			    			pass1counter.println(String.format("%x", pccounter));
@@ -501,19 +503,17 @@ public class assembler {
 				    			remover.deleteCharAt(0);
 				    			remover.deleteCharAt(temp_holder.length()-4);
 				    			temp_holder=(remover.toString());
-
 				    			double size=(double) temp_holder.length()/2;
 				    			size = Math.ceil(size);
 				    			int inted_size= (int) size;	
 				    			String string_size= Integer.toString(inted_size);
-				    	
-				    		
-
 				    			littable.println(temp_lit.get(i)+" "+temp_holder+" "+string_size+" "+String.format("%x", pccounter));
-				    			
 				    			ltorg.put(temp_holder, String.format("%x", pccounter));
+				    			litloc.add(String.format("%x", pccounter));
 				    			pccounter=pccounter+(inted_size);
-
+				    			litlength.add(string_size);
+				    			litval.add(temp_holder);
+				    	
 		    				}
 		    				else if(temp_holder.charAt(1)=='C') {
 		    		    		StringBuilder remover = new StringBuilder(temp_holder) ;
@@ -526,10 +526,12 @@ public class assembler {
 				    			littable.println(temp_lit.get(i)+" "+value+" "+temp_holder.length()+" "+String.format("%x", pccounter));
 
 				    			ltorg.put(temp_holder, String.format("%x", pccounter));
-
+				    			litloc.add(String.format("%x", pccounter));
 				    			int inted_size=temp_holder.length();	
 				    			pccounter=pccounter+(inted_size);
-
+				    			litlength.add(Integer.toString(temp_holder.length()));
+				    			litval.add(value);
+				    			
 		    				}
 		    				else {
 		    					StringBuilder remover = new StringBuilder(temp_holder) ;
@@ -541,7 +543,10 @@ public class assembler {
 		    					ltorg.put(temp_holder, String.format("%x", pccounter));
 		    					String temp1= String.format("%x", temp_lit.get(i));
 		    					int temp2 = Integer.parseInt(temp1,16);
+		    					litloc.add(String.format("%x", pccounter));
 		    					pccounter=pccounter+temp2;
+		    					litlength.add(Integer.toString(temp_holder.length()));
+				    			litval.add(String.format("%x",temp_holder));
 		    				}
 		    			}
 		    			temp_lit.clear();
@@ -561,7 +566,7 @@ public class assembler {
 		    		/* else if(line_arr[2].charAt(0)=='=') {
 			    		 st.put(line_arr[0],String.format("%x", pccounter));
 			    		 symboltablewriter.println(line_arr[0]+ "	"+String.format("%x", pccounter));
-			    		 st.put(line_arr[0],String.format("%x", pccounter) );
+			    		 st.put(line_arr[0],String.format("%x", pccounter) );0
 			    		 }*/
 		    		 else if(line_arr[2].indexOf('-')>=0||line_arr[2].indexOf('+')>=0){
 		    				if(line_arr[2].indexOf('-')>0) {
@@ -679,12 +684,14 @@ public class assembler {
         pass1counter.close();
         littable.close();
 	}
-        public static void pass2(String myfile,Map<String,String>op,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String > OPM,Map<String,String>ltorg,List<String> loccounter) throws FileNotFoundException{
+        public static void pass2(String myfile,Map<String,String>op,Map<String,String>st,Map<String,String>OP_1,Map<String,String>OP_2,List<String> temp_lit,Map<String,String > OPM,Map<String,String>ltorg,List<String> loccounter,List<String> litpool,List<String> litval,List<String> litlength,List<String> litloc) throws FileNotFoundException{
             PrintWriter objectcode;
 			try {
 				int rrepeat=0;
 				int tlength=0;
 				int flagfirst=1;
+				int it = 0;
+				int iter = 0;
 				int htme_counter_flag =0; 
 				String tflag="";
 				int count_flag = 0;
@@ -1327,10 +1334,26 @@ public class assembler {
              			tflag = "A";
              			}
              			else if(line_type.equals("end")) {
-             					System.out.println("mafrood hena");
              			        HTME.write("T"+sappender6(tbegin,tbegin.length())+String.format("%x",tlength)+tstring+"\n");
              				}
-             			
+             			else if(line_type.equals("ltorg")) {
+             				for(int i = 0 ; i< Integer.parseInt(litpool.get(iter));i++) {
+             					iter ++;
+             					if(tstring.length()+Integer.parseInt(litlength.get(it))<60) {
+             						tstring = tstring+litval.get(it);
+             						tlength = tlength + Integer.parseInt(litlength.get(it));
+             					}
+             					else {                       			    
+                 			        HTME.write("T"+sappender6(tbegin,tbegin.length())+String.format("%x",tlength)+tstring+"\n");
+                       			     tbegin = litloc.get(it);
+                       			     tlength = 0 ;
+              						 tlength = tlength + Integer.parseInt(litlength.get(it));
+                    				 tstring = litval.get(it);
+             					}
+             					it++;
+             				}
+             				iter++;
+             			}
 
              	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                
@@ -1368,7 +1391,12 @@ public class assembler {
                myfile = myfile.trim();
                myfile= myfile + ".txt";
                List<String> temp_lit = new ArrayList<String>();
+               List<String> litloc = new ArrayList<String>();
+
                List<String> loccounter = new ArrayList<String>();
+               List<String> litval = new ArrayList<String>();
+               List<String> litpool = new ArrayList<String>();
+               List<String> litlength = new ArrayList<String>();               
                Map<String,String > LTORG = new HashMap<>();//hashmap OPcode to simle
                Map<String,String > OP = new HashMap<>();//hashmap OPcode to simle
                Map<String,String > ST = new HashMap<>();//symble table
@@ -1513,8 +1541,8 @@ public class assembler {
                OPM.put("S", "4");
                OPM.put("T", "5");
                OPM.put("F", "6");
-               pass1(myfile,ST,OP_1,OP_2,temp_lit,LTORG,loccounter);
-               pass2(myfile,OP,ST,OP_1,OP_2,temp_lit,OPM,LTORG,loccounter);
+               pass1(myfile,ST,OP_1,OP_2,temp_lit,LTORG,loccounter,litval,litlength,litpool,litloc);
+               pass2(myfile,OP,ST,OP_1,OP_2,temp_lit,OPM,LTORG,loccounter,litval,litlength,litpool,litloc);
                System.out.println("fin");
 
 	}
